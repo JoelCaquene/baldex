@@ -5,43 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Renda - Cigna Group</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body {
-            background-color: #0c0b2d;
-            background-image: url('{% static "cigna_group/images/fundo_azul_raios.jpg" %}');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            font-family: 'Inter', sans-serif;
+            /* Novo gradiente de fundo roxo-azulado */
+            background: linear-gradient(135deg, #2A095B, #001f3f);
             color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            min-height: 100vh;
-            text-align: center;
             padding-bottom: 80px; /* Espaço para o footer fixo */
         }
 
         .header {
             width: 100%;
-            padding: 20px;
+            padding: 1.5rem;
             color: #ffeb3b;
             text-shadow: 0 0 5px #ffeb3b;
-            font-size: 1.5em;
+            font-size: 1.5rem;
             position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-sizing: border-box;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-weight: bold;
-            letter-spacing: 2px;
         }
 
         .logout-btn {
@@ -62,7 +52,7 @@
 
         .income-container {
             width: 90%;
-            max-width: 700px; 
+            max-width: 700px;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(8px);
             border-radius: 25px;
@@ -70,7 +60,6 @@
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
             padding: 25px;
             margin-top: 30px;
-            margin-bottom: 100px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
@@ -87,59 +76,30 @@
 
         /* Novo estilo para os cartões indicadores */
         .income-item {
-            background: linear-gradient(135deg, #1f3661, #0d1a33); /* Gradiente mais profundo */
+            background: rgba(40, 40, 40, 0.7);
             padding: 25px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6); /* Sombra mais destacada */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .income-item::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.05); /* Brilho de fundo sutil */
-            transform: rotate(45deg);
-            z-index: 0;
-            transition: all 0.5s ease;
-        }
-
-        .income-item:hover::before {
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(45deg) scale(1.1);
-        }
-
         .income-item:hover {
-            transform: translateY(-8px) scale(1.03); /* Efeito de elevação maior */
+            transform: translateY(-8px) scale(1.03);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+            background: rgba(60, 60, 60, 0.8);
         }
 
-        .income-item strong, .income-item .value-display, .income-item .icon {
-            position: relative;
-            z-index: 1; /* Garante que o conteúdo fique acima do brilho */
-        }
-
-        .income-item strong {
-            color: #b0c4de; /* Azul suave para títulos */
-            font-size: 1.1em;
-            margin-bottom: 8px;
-            text-shadow: none;
-        }
-        
         .income-item .icon {
-            font-size: 3em; /* Ícones maiores */
+            font-size: 3em;
             margin-bottom: 12px;
-            color: #64b5f6; /* Azul claro para os ícones */
+            color: #64b5f6;
             text-shadow: 0 0 10px rgba(100, 181, 246, 0.7);
         }
 
@@ -151,14 +111,10 @@
             letter-spacing: 1px;
         }
 
-        /* Cores de valor mais destacadas */
-        .positive-value {
-            color: #4CAF50; /* Verde vibrante */
-            text-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
-        }
-        .deposits-value { color: #29b6f6; } /* Azul ciano */
-        .subsidy-value { color: #ffd700; } /* Dourado */
-        .withdrawn-value { color: #f44336; } /* Vermelho forte */
+        .positive-value { color: #4CAF50; }
+        .deposits-value { color: #29b6f6; }
+        .subsidy-value { color: #ffd700; }
+        .withdrawn-value { color: #f44336; }
 
         .footer-nav {
             position: fixed;
@@ -184,43 +140,11 @@
             flex: 1;
         }
 
-        .footer-item img {
-            width: 35px;
-            height: 35px;
-            margin-bottom: 5px;
-            filter: drop-shadow(0 0 7px #fff);
-        }
-
         .footer-item:hover {
             color: #ffeb3b;
             transform: translateY(-3px);
         }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .income-container {
-                grid-template-columns: 1fr;
-                padding: 20px;
-            }
-            .income-item {
-                padding: 20px;
-            }
-            .income-item strong {
-                font-size: 1em;
-            }
-            .income-item .icon {
-                font-size: 2.5em;
-            }
-            .value-display {
-                font-size: 1.6em;
-            }
-            .header {
-                font-size: 1.3em;
-            }
-        }
     </style>
-    {# Font Awesome para ícones #}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="header">
@@ -228,55 +152,103 @@
         <a href="{% url 'saida' %}" class="logout-btn">Sair</a>
     </div>
 
-    <div class="income-container">
+    <main class="income-container">
         <h2>Visão Geral da Renda</h2>
 
+        <!-- Nível do Cliente -->
         <div class="income-item">
-            <i class="fas fa-chart-line icon"></i>
+            <svg class="h-12 w-12 text-purple-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l10 4.5v10.5l-10 4.5-10-4.5v-10.5l10-4.5z"></path>
+                <path d="M12 12l-5 2.5m5-2.5l5 2.5m-5-2.5v10.5"></path>
+            </svg>
             <strong>Nível do Cliente:</strong>
             <span class="value-display">{{ nivel_cliente }}</span>
         </div>
+
+        <!-- Depósitos Aprovados -->
         <div class="income-item">
-            <i class="fas fa-money-check-alt icon"></i>
+            <svg class="h-12 w-12 text-cyan-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s-8-4-8-10v-5l8-4 8 4v5c0 6-8 10-8 10z"></path>
+                <line x1="12" y1="18" x2="12" y2="10"></line>
+                <line x1="10" y1="12" x2="14" y2="12"></line>
+            </svg>
             <strong>Depósitos Aprovados:</strong>
             <span class="value-display deposits-value">{{ depositos_aprovados|floatformat:2 }} KZ</span>
         </div>
+
+        <!-- Saldo Disponível -->
         <div class="income-item">
-            <i class="fas fa-wallet icon"></i>
+            <svg class="h-12 w-12 text-green-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
             <strong>Saldo Disponível:</strong>
             <span class="value-display positive-value">{{ saldo_disponivel|floatformat:2 }} KZ</span>
         </div>
+
+        <!-- Saldo de Subsídios -->
         <div class="income-item">
-            <i class="fas fa-hand-holding-KZ icon"></i>
+            <svg class="h-12 w-12 text-yellow-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1L3 6l9 5 9-5-9-5z"></path>
+                <path d="M3 12l9 5 9-5"></path>
+                <path d="M3 18l9 5 9-5"></path>
+            </svg>
             <strong>Saldo de Subsídios:</strong>
             <span class="value-display subsidy-value">{{ saldo_subsidio|floatformat:2 }} KZ</span>
         </div>
-        <div class="income-item">
-            <i class="fas fa-exchange-alt icon"></i>
+
+        <!-- Total Sacado -->
+        <div class="income-item col-span-1 md:col-span-2">
+            <svg class="h-12 w-12 text-red-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1v22"></path>
+                <path d="M17 5H7l-3 4"></path>
+                <path d="M17 19H7l3-4"></path>
+            </svg>
             <strong>Total Sacado:</strong>
             <span class="value-display withdrawn-value">{{ total_sacado|floatformat:2 }} KZ</span>
         </div>
-    </div>
+    </main>
 
+    <!-- FOOTER NAV -->
     <nav class="footer-nav">
         <a href="{% url 'menu' %}" class="footer-item">
-            <img src="{% static 'cigna_group/images/icon_menu.png' %}" alt="Menu">
+            <svg class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
             <span>MENU</span>
         </a>
         <a href="{% url 'nivel' %}" class="footer-item">
-            <img src="{% static 'cigna_group/images/icon_nivel.png' %}" alt="Nivel">
+            <svg class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
             <span>NÍVEL</span>
         </a>
-        <a href="{% url 'renda' %}" class="footer-item">
-            <img src="{% static 'cigna_group/images/icon_renda.png' %}" alt="Renda">
+        <a href="{% url 'renda' %}" class="footer-item" style="color:#ffeb3b; transform: translateY(-3px);">
+            <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
             <span>RENDA</span>
         </a>
         <a href="{% url 'sobre' %}" class="footer-item">
-            <img src="{% static 'cigna_group/images/icon_sobre.png' %}" alt="Sobre">
+            <svg class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="8"></line>
+            </svg>
             <span>SOBRE</span>
         </a>
         <a href="{% url 'perfil' %}" class="footer-item">
-            <img src="{% static 'cigna_group/images/icon_perfil.png' %}" alt="Perfil">
+            <svg class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
             <span>PERFIL</span>
         </a>
     </nav>
