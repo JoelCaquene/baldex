@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.template.defaultfilters import pluralize
+# IMPORTAR O FORMULÁRIO PERSONALIZADO PARA CORRIGIR O ERRO DE NONE
+from .forms import UsuarioAdminChangeForm 
 from .models import (
     Usuario, Config, Nivel, PlatformBankDetails, Deposito, 
     ClientBankDetails, NivelAlugado, Saque, Renda, Tarefa, 
@@ -11,6 +13,9 @@ from .views import aprovar_deposito_com_subsidio # Importa a função do views.p
 
 # Customização do Admin para o modelo Usuario
 class UsuarioAdmin(BaseUserAdmin):
+    # A ÚNICA MUDANÇA: USAR O FORMULÁRIO PERSONALIZADO PARA CORRIGIR O ERRO
+    form = UsuarioAdminChangeForm
+
     # Campos que aparecerão na lista de usuários no admin
     list_display = ('phone_number', 'username', 'invitation_code', 'is_staff', 'is_active', 'spins_remaining', 'can_spin_roulette')
     
@@ -134,3 +139,4 @@ class PremioSubsidioAdmin(admin.ModelAdmin):
 @admin.register(Sobre)
 class SobreAdmin(admin.ModelAdmin):
     list_display = ('ultima_atualizacao',)
+    
