@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - comdirect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Paleta e Fontes - Ajustadas para Fundo Claro */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
+
+        :root {
+            --cor-fundo-principal: #ffffff; /* Fundo Branco PURO */
+            --cor-card-fundo: #f8f8f8; /* Fundo leve para o cartão */
+            --cor-borda-card: #e0e0e0;
+            --cor-texto-principal: #333333;
+            --cor-texto-secundario: #777777;
+            --cor-destaque-1: #007bff; /* Azul Primário (para Header e Ação Principal) */
+            --cor-vermelho-sair: #dc3545; /* Vermelho para o botão Sair */
+            --cor-cinza-secundario: #6c757d; /* Cinza para botão de senha */
+            /* Cores de Destaque dos Valores (importadas da página Renda) */
+            --positive-value-color: #28a745; /* Verde para Saldo */
+            --subsidy-value-color: #ffc107; /* Amarelo para Subsídio */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--cor-fundo-principal); 
+            color: var(--cor-texto-principal);
+        }
+
+        /* --- CABEÇALHO E BOTÃO VOLTAR (MANTIDO) --- */
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 10px;
+            background-color: var(--cor-destaque-1);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 700;
+            line-height: 1;
+            padding: 5px;
+            transition: opacity 0.3s;
+        }
+        
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .back-btn::before {
+            content: '← Voltar'; 
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        /* --- CONTAINER PRINCIPAL --- */
+        .profile-container {
+            width: 90%;
+            max-width: 500px;
+            margin-top: 30px;
+            padding: 0 10px;
+            text-align: center;
+        }
+        
+        /* ----------------------------------------------------- */
+        /* --- ESTILOS DOS CARDS DE SALDO (Novos) --- */
+        /* ----------------------------------------------------- */
+        .income-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 colunas */
+            gap: 15px;
+            margin-bottom: 30px; /* Espaço antes do card de identificação */
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0 5px; /* Pequeno ajuste no padding para borda */
+        }
+
+        .income-item {
+            background: var(--cor-card-fundo);
+            padding: 15px 10px;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--cor-borda-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            text-align: center;
+            min-height: 120px; /* Mantém a altura dos cards da página Renda */
+        }
+
+        .income-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Ícones */
+        .income-item i.fa-solid {
+            font-size: 1.8em; 
+            margin-bottom: 5px; 
+        }
+
+        /* Títulos */
+        .income-item strong {
+            font-size: 0.85em; 
+            font-weight: 600;
+            color: var(--cor-texto-secundario); 
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+        
+        /* Valores */
+        .value-display {
+            font-size: 1.1em; 
+            font-weight: 700;
+            color: var(--cor-texto-principal);
+            letter-spacing: normal;
+        }
+        
+        /* Cores específicas */
+        .positive-value { color: var(--positive-value-color); } /* Verde */
+        .subsidy-value { color: var(--subsidy-value-color); } /* Amarelo */
+
+        /* --- CARD DE INFORMAÇÕES BÁSICAS (MANTIDO) --- */
+        .info-card {
+            background-color: var(--cor-card-fundo);
+            border: 1px solid var(--cor-borda-card);
+            border-radius: 15px;
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: left;
+        }
+        /* ... outros estilos do info-card (mantidos) ... */
+        
+        /* --- BOTÕES DE AÇÃO (MANTIDOS) --- */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+            width: 100%;
+            margin-bottom: 50px;
+            align-items: center; 
+        }
+
+        .action-btn {
+            width: 85%; 
+            max-width: 350px; 
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--cor-destaque-1);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+        
+        .btn-senha {
+            background-color: var(--cor-cinza-secundario);
+            color: white;
+            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+        }
+        
+        .btn-logout {
+            background-color: var(--cor-vermelho-sair);
+            color: white;
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+        }
+        /* ... outros estilos de hover (mantidos) ... */
+
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        <a href="{% url 'menu' %}" class="back-btn"></a>
+        <h1>Perfil</h1>
+    </div>
+
+    <div class="profile-container">
+        
+        <div class="income-grid">
+
+            <div class="income-item">
+                <i class="fa-solid fa-wallet positive-value"></i>
+                <strong>Saldo Disponível</strong>
+                <span class="value-display positive-value">{{ saldo_disponivel|floatformat:2|default:"0.00" }} KZ</span>
+            </div>
+
+            <div class="income-item">
+                <i class="fa-solid fa-gift subsidy-value"></i>
+                <strong>Saldo de Subsídios</strong>
+                <span class="value-display subsidy-value">{{ saldo_subsidio|floatformat:2|default:"0.00" }} KZ</span>
+            </div>
+
+        </div>
+        <div class="info-card">
+            <h2>Dados de Identificação</h2>
+            <div class="profile-info">
+                <div class="info-item">
+                    <span class="label">Número do Usuário</span>
+                    <span class="value">{{ usuario.username }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Código de Convite</span>
+                    <span class="value">{{ usuario.invitation_code }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            
+            <a href="{% url 'editar_perfil' %}" class="action-btn btn-primary">
+                Informações Bancárias
+            </a>
+            
+            <a href="{% url 'editar_senha' %}" class="action-btn btn-senha">
+                Mudar Senha
+            </a>
+            
+            <a href="{% url 'saida' %}" class="action-btn btn-logout">
+                Sair
+            </a>
+        </div>
+        
+    </div>
+
+</body>
+</html>

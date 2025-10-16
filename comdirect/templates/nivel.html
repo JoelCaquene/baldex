@@ -1,0 +1,290 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Níveis - comdirect</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+        :root {
+            /* Cores ajustadas para Fundo Branco e Cards Claros */
+            --cor-fundo-principal: #ffffff; 
+            --cor-card-fundo: #ffffff; /* Fundo do Card Branco conforme solicitado */
+            --cor-borda-card: #f0f0f0; /* Borda suave para o card */
+            --cor-destaque-1: #007bff; /* Azul primário moderno */
+            --cor-destaque-2: #ff3399; /* Rosa/Roxo para acentos */
+            --cor-texto-claro: #333333; /* Texto escuro para o card (fundo branco) */
+            --cor-texto-escuro: #6c757d; /* Texto secundário */
+            --cor-texto-principal: #212529; /* Texto principal do body (fundo branco) */
+            --cor-botao-comprar: #28a745; /* Verde moderno */
+            --cor-shadow-card: 0 4px 15px rgba(0, 0, 0, 0.1); 
+            --cor-shadow-botao: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        body {
+            background-color: var(--cor-fundo-principal); /* Fundo Branco */
+            color: var(--cor-texto-principal);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            /* Garantir que não haja imagem de fundo que escureça */
+            background-image: none;
+            background-attachment: scroll;
+        }
+
+        /* Removendo o pseudo-elemento escuro */
+        body::before {
+            content: none;
+        }
+        
+        .header {
+            width: 100%;
+            padding: 15px 20px;
+            color: var(--cor-texto-principal);
+            font-size: 1.8em;
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: flex-start; /* Alinha o botão Voltar/Título à esquerda */
+            align-items: center;
+            box-sizing: border-box;
+            background: var(--cor-fundo-principal); 
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 1.2em; /* Tamanho ajustado para layout com botão */
+        }
+
+        /* Botão Voltar (Tamanho e Estilo usado em outras páginas claras) */
+        .back-btn {
+            font-size: 24px; /* Tamanho do ícone/botão ajustado para 24px ou similar a um ícone */
+            line-height: 1;
+            text-decoration: none;
+            color: var(--cor-texto-principal);
+            margin-right: 15px;
+            cursor: pointer;
+            width: 30px; /* Garante área de clique consistente */
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+        
+        .back-btn:hover {
+            color: var(--cor-destaque-1);
+        }
+
+        /* O botão "Sair" foi REMOVIDO conforme sua instrução */
+        
+        .levels-display-container {
+            width: 95%;
+            max-width: 1000px; /* Aumenta um pouco para a visualização de 2 colunas */
+            margin: 30px auto;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .levels-display-container h2 {
+            color: var(--cor-destaque-1); 
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+        
+        /* Contêiner Flex para os cartões de nível - 2 colunas */
+        .levels-grid-container {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 20px; 
+            width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        /* Cartão de Nível - Fundo Branco */
+        .level-card-item {
+            background: var(--cor-card-fundo); /* Fundo Branco */
+            color: var(--cor-texto-claro); /* Texto escuro para contraste */
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--cor-shadow-card);
+            width: calc(50% - 10px); /* Garante 2 colunas com um pequeno espaço */
+            min-width: 250px; 
+            transition: all 0.3s ease;
+            border: 1px solid var(--cor-borda-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .level-card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Imagens Quadradas (1:1) */
+        .level-card-item-image, .level-card-item-image-placeholder {
+            width: 120px; /* Tamanho moderado */
+            height: 120px; /* Quadrado (1:1) */
+            border-radius: 15px; /* Borda levemente arredondada (Quadrado) */
+            /* Se você quiser CIRCULAR, mude para border-radius: 50%; */
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid var(--cor-destaque-1);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+            transition: transform 0.3s ease;
+            background-color: #f8f9fa; /* Fundo leve para o placeholder */
+        }
+        
+        /* Ajuste do placeholder para ser visível em fundo branco */
+        .level-card-item-image-placeholder {
+            border: 3px dashed var(--cor-destaque-2);
+        }
+
+        .level-card-item h3 {
+            margin-top: 0;
+            font-size: 1.6em;
+            color: var(--cor-destaque-2); 
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .level-card-item p {
+            margin: 5px 0;
+            font-size: 1em;
+            color: var(--cor-texto-escuro);
+        }
+
+        .level-card-item p strong {
+            color: var(--cor-texto-claro); /* Texto forte mais escuro */
+        }
+
+        .buy-btn {
+            background: linear-gradient(45deg, var(--cor-botao-comprar), #218838);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: var(--cor-shadow-botao);
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+
+        .buy-btn:hover {
+            background: linear-gradient(45deg, #218838, var(--cor-botao-comprar));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+        }
+
+        .no-levels-message {
+            color: var(--cor-texto-principal);
+            font-size: 1.2em;
+            margin-top: 30px;
+        }
+
+        /* Responsividade para garantir 2 colunas em telas de tablet e 1 em telas muito pequenas */
+        @media (max-width: 600px) {
+            .level-card-item {
+                width: 90%; /* Uma coluna em telas pequenas */
+                max-width: none;
+            }
+            
+            .levels-grid-container {
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.1em;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a onclick="history.back()" class="back-btn">&#x2190;</a> 
+        <h1>Níveis</h1>
+        </div>
+
+    <div class="levels-display-container">
+        <h2>Níveis Disponíveis</h2>
+        <div class="levels-grid-container">
+            {% if niveis %}
+                {% for nivel in niveis %}
+                    <div class="level-card-item" data-id="{{ nivel.id }}">
+                        {% if nivel.imagem %}
+                            <img src="{{ nivel.imagem.url }}" alt="Imagem do Nível {{ nivel.nome_nivel }}" class="level-card-item-image">
+                        {% else %}
+                            <div class="level-card-item-image-placeholder"></div>
+                        {% endif %}
+                        <h3>{{ nivel.nome_nivel }}</h3>
+                        <p><strong>Depósito Mínimo:</strong> KZ {{ nivel.deposito_minimo }}</p>
+                        <p><strong>Ganho Diário:</strong> KZ {{ nivel.ganho_diario }}</p>
+                        <p><strong>Ganho Mensal:</strong> KZ {{ nivel.ganho_mensal }}</p>
+                        <p><strong>Ciclo:</strong> {{ nivel.ciclo_dias }} dias</p>
+                        <button class="buy-btn" data-id="{{ nivel.id }}">Alugar</button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-levels-message">Nenhum nível disponível no momento.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const buyButtons = document.querySelectorAll('.buy-btn');
+
+            buyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const nivelId = this.getAttribute('data-id');
+                    
+                    // Lógica de comunicação com Django MANTIDA
+                    fetch('/alugar-nivel/', { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ 'nivel_id': nivelId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert(data.message);
+                            window.location.reload(); 
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Ocorreu um erro ao tentar alugar o nível.');
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

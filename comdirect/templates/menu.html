@@ -1,0 +1,751 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - comdirect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+        /* Variáveis CSS para Cores e Sombras */
+        :root {
+            --cor-fundo: #ffffff;
+            --cor-primaria: #007bff; /* Azul primário */
+            --cor-secundaria: #ff00c7; /* Magenta Neon */
+            --cor-texto: #333333;
+            --cor-texto-claro: #6c757d;
+            --cor-card-bg: #ffffff;
+            --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --brilho-header: rgba(0, 0, 0, 0.05);
+            --brilho-icon-novo: 0 0 10px rgba(0, 123, 255, 0.8), 0 0 20px rgba(0, 123, 255, 0.5); 
+            --brilho-footer: rgba(0, 123, 255, 0.4);
+
+            /* NOVAS VARIÁVEIS PARA O MODAL */
+            --cor-modal-bg: #212529; 
+            --brilho-modal: 0 0 15px rgba(0, 230, 255, 0.8), 0 0 25px rgba(255, 0, 199, 0.6);
+            --cor-modal-titulo: #00e6ff;
+            --cor-modal-texto: #f1f1f1;
+
+            /* NOVAS VARIAVEIS PARA INFO CARDS */
+            --cor-nivel: #6f42c1; /* Roxo */
+            --cor-deposito: #007bff; /* Azul Forte */
+        }
+
+        /* Estilos Globais e do Body */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 70px;
+        }
+
+        /* --- Estilos do Novo Bloco de Informações (Depósitos e Nível) --- */
+        .info-bar-container {
+            width: 100%;
+            background-color: var(--cor-fundo);
+            padding: 10px 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-top: 5px; /* Pequeno espaço após o logo */
+            box-sizing: border-box;
+            z-index: 999;
+        }
+
+        .info-bar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Duas colunas */
+            gap: 15px;
+            max-width: 400px; /* Limita a largura para mobile */
+            margin: 0 auto;
+        }
+
+        .info-card {
+            background-color: var(--cor-card-bg);
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: var(--sombra-card);
+            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .info-card strong {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--cor-texto-claro);
+            margin-bottom: 3px;
+        }
+
+        .info-card .value-display {
+            font-size: 1.1em;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .info-card i {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        /* Cores Específicas */
+        .deposit-card {
+            color: var(--cor-deposito);
+            border-left: 5px solid var(--cor-deposito);
+        }
+        .level-card {
+            color: var(--cor-nivel);
+            border-right: 5px solid var(--cor-nivel);
+        }
+
+        /* --- FIM DOS ESTILOS DO NOVO BLOCO --- */
+
+
+        /* Estilos do Cabeçalho */
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            padding: 10px 15px;
+            background-color: var(--cor-fundo);
+            box-shadow: 0 2px 4px var(--brilho-header);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Estilo do Logo Centralizado */
+        .logo-container {
+            width: auto;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+        }
+        .logo-box {
+            padding: 8px 20px;
+            background-color: #343434; 
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 0, 123, 0.4), 0 0 10px rgba(0, 230, 255, 0.4); 
+        }
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Lógicas do Modal, Side Menu, Carrossel, Scrolling Text e Quick Actions... (MANTIDAS) */
+
+        /* ... seu CSS restante (do modal, side menu, carrossel, scrolling text, quick actions, footer) permanece aqui ... */
+        
+        /* --- ESTILOS DO NOVO MODAL DE BOAS-VINDAS --- */
+
+        .welcome-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .welcome-modal-content {
+            background-color: var(--cor-modal-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px;
+            max-width: 350px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--brilho-modal);
+            position: relative;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .modal-title {
+            color: var(--cor-modal-titulo);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(0, 230, 255, 0.6);
+        }
+
+        .modal-text {
+            color: var(--cor-modal-texto);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .modal-link-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .modal-link {
+            text-decoration: none;
+            color: var(--cor-modal-texto);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .modal-link.whatsapp {
+            background-color: #25d366;
+        }
+        .modal-link.telegram {
+            background-color: #0088cc;
+        }
+        .modal-link:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+        .modal-link i {
+            font-size: 1.1em;
+        }
+
+        .modal-close-btn {
+            background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: opacity 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .modal-close-btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.7);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- FIM DOS ESTILOS DO MODAL --- */
+
+        /* Side Menu - MANTIDO */
+        .side-menu {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            background-color: #212529;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .side-menu .main-links a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            color: #f1f1f1;
+            display: block;
+            transition: 0.3s;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .side-menu .main-links .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .side-menu .main-links .menu-item i {
+            width: 20px;
+            height: 20px;
+            color: #f1f1f1;
+            font-size: 1.1em;
+        }
+        .side-menu .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+            text-decoration: none;
+            color: #fff;
+        }
+        
+        /* Estilos do Carrossel - Redimensionado para caber a imagem da Cignea */
+        .carousel-container {
+            width: 90%;
+            max-width: 800px;
+            height: 180px;
+            margin-top: 15px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--sombra-card);
+            position: relative;
+        }
+        #image-carousel {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
+        }
+
+        /* Faixa de Texto Rolante */
+        .scrolling-text-container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #000000; 
+            color: #ffffff; 
+            padding: 10px 0;
+            margin-top: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        .scrolling-text {
+            display: inline-block;
+            animation: scrollText 20s linear infinite; 
+            padding-left: 100%;
+            font-weight: 600;
+        }
+        @keyframes scrollText {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Estilos do Novo Bloco de Ações Rápidas (Quick Actions) */
+        .quick-actions-container {
+            width: 90%;
+            max-width: 800px;
+            background-color: var(--cor-card-bg);
+            border-radius: 15px;
+            padding: 20px 10px;
+            margin-top: 20px;
+            box-shadow: var(--sombra-card);
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            /* Alterado para 4 colunas para corresponder aos novos 4 botões */
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px;
+            padding: 0 5px;
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--cor-texto);
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            color: var(--cor-primaria);
+        }
+
+        .action-icon-box {
+            width: 50px;
+            height: 50px;
+            background-color: #000000;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            position: relative;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .action-button:hover .action-icon-box {
+            box-shadow: var(--brilho-icon-novo);
+        }
+
+        .action-icon-box img {
+            width: 28px;
+            height: 28px;
+            filter: brightness(150%);
+        }
+
+        /* Estilos da Barra de Rodapé (Ajustado para 4 botões) */
+        .footer-nav {
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background-color: #ffffff;
+            padding: 10px 0;
+            /* MANTIDO o flex para 4 itens - funciona bem */
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .footer-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
+            opacity: 0.1;
+            z-index: -1;
+            box-shadow: 0 0 20px var(--brilho-footer);
+        }
+
+        /* Estilo do QUADRADO AZUL COM BRILHO para itens do rodapé */
+        .footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--cor-texto-claro);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: color 0.3s, transform 0.2s;
+            cursor: pointer;
+            
+            position: relative; 
+            padding: 5px 0;
+        }
+
+        .footer-item-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-item img {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 5px;
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+
+        /* Efeito de destaque para o item ativo/hover no rodapé (Quadrado Azul com Brilho) */
+        .footer-item.active,
+        .footer-item:hover {
+            color: var(--cor-primaria);
+            transform: translateY(-3px);
+        }
+
+        .footer-item.active img,
+        .footer-item:hover img {
+            filter: none;
+        }
+        
+        .footer-nav .menu-lateral-item {
+            display: none;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .carousel-container {
+                height: 160px;
+            }
+            .action-icon-box {
+                width: 45px;
+                height: 45px;
+            }
+            .action-icon-box img {
+                width: 25px;
+                height: 25px;
+            }
+            .action-button {
+                font-size: 0.65rem;
+            }
+            .logo-text {
+                font-size: 1rem;
+            }
+            .footer-item {
+                font-size: 0.7rem;
+            }
+            .footer-item img {
+                width: 24px;
+                height: 24px;
+            }
+            .welcome-modal-content {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcomeModal" class="welcome-modal-overlay" style="display: none;">
+        <div class="welcome-modal-content">
+            <div class="modal-title">SEJÁ BEM VINDO.</div>
+            <p class="modal-text">
+                Na **COMDIRECT**, antes de realizar o seu depósito, para maior confiança e segurança, **solicite verificar os seguintes documentos: ALVARÁ COMERCIAL e CERTIDÃO.**
+            </p>
+            <p class="modal-text" style="font-weight: 600;">
+                **Depois de investir, dentro de 12 horas, receba o seu CONTRATO DE INVESTIMENTO.**
+            </p>
+            <p class="modal-text">
+                Para mais informações, contacte os nossos canais:
+            </p>
+            
+            <div class="modal-link-container">
+                <a href="{{ config.link_grupo_whatsapp|default:'#' }}" target="_blank" class="modal-link whatsapp">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="{{ config.link_grupo_telegram|default:'#' }}" target="_blank" class="modal-link telegram">
+                    <i class="fab fa-telegram-plane"></i> Telegram
+                </a>
+            </div>
+
+            <button class="modal-close-btn" onclick="closeWelcomeModal()">
+                Entendi e Continuar
+            </button>
+        </div>
+    </div>
+
+    <div id="mySideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="main-links">
+            <a href="{% url 'deposito' %}" class="menu-item"><i class="fas fa-landmark"></i> Depósito</a>
+            <a href="{% url 'saque' %}" class="menu-item"><i class="fas fa-hand-holding-usd"></i> Saque</a>
+            <a href="{% url 'renda' %}" class="menu-item"><i class="fas fa-chart-line"></i> Renda</a>
+            <a href="{% url 'tarefa' %}" class="menu-item"><i class="fas fa-clipboard-list"></i> Tarefa</a>
+            <a href="{% url 'nivel' %}" class="menu-item"><i class="fas fa-star"></i> Nível</a>
+            <a href="{% url 'equipa' %}" class="menu-item"><i class="fas fa-users"></i> Equipa</a>
+            <a href="{% url 'sobre' %}" class="menu-item"><i class="fas fa-info-circle"></i> Sobre</a>
+            <a href="{% url 'perfil' %}" class="menu-item"><i class="fas fa-user-circle"></i> Perfil</a>
+            <a href="{% url 'premios_subsidios' %}" class="menu-item"><i class="fas fa-trophy"></i> Prêmios de Subsídio</a>
+        </div>
+        <div class="bottom-links">
+            {% if config and config.link_grupo_whatsapp %}
+            <a href="{{ config.link_grupo_whatsapp }}" target="_blank" class="social-btn">
+                <img src="{% static 'comdirect/images/icon_whatsapp.png' %}" alt="WhatsApp">
+                <span>WhatsApp</span>
+            </a>
+            {% else %}
+            <a href="#" target="_blank" class="social-btn">
+                <img src="{% static 'comdirect/images/icon_whatsapp.png' %}" alt="WhatsApp">
+                <span>WhatsApp</span>
+            </a>
+            {% endif %}
+
+            {% if config and config.link_grupo_telegram %}
+            <a href="{{ config.link_grupo_telegram }}" target="_blank" class="social-btn">
+                <img src="{% static 'comdirect/images/icon_telegram.png' %}" alt="Telegram">
+                <span>Telegram</span>
+            </a>
+            {% else %}
+            <a href="#" target="_blank" class="social-btn">
+                <img src="{% static 'comdirect/images/icon_telegram.png' %}" alt="Telegram">
+                <span>Telegram</span>
+            </a>
+            {% endif %}
+            
+            <a href="{% url 'saida' %}" class="logout-btn">
+                <img src="{% static 'comdirect/images/icon_saida.png' %}" alt="Sair">
+                <span>Sair</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo-box">
+                <div class="logo-text">COMDIRECT</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-bar-container">
+        <div class="info-bar-grid">
+            <div class="info-card deposit-card">
+                <i class="fas fa-circle-up"></i>
+                <strong>Depósitos Aprovados</strong>
+                <span class="value-display">
+                    {{ depositos_aprovados|floatformat:2|default:"0.00" }} KZ
+                </span>
+            </div>
+            
+            <div class="info-card level-card">
+                <i class="fas fa-crown"></i>
+                <strong>Nível do Cliente</strong>
+                <span class="value-display">
+                    {% if nivel_cliente == "Nível Básico (Sem nível alugado)" %}
+                        Básico
+                    {% else %}
+                        {{ nivel_cliente|default:"Básico" }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-container">
+        <div id="image-carousel"></div>
+    </div>
+
+    <div class="scrolling-text-container">
+        <div class="scrolling-text">
+            COMDIRECT, SOMOS UM BANCO ALEMÃO, QUE ATUAMOS ATUALMENTE EM VÁRIAS MODALIDADES, INCLUINDO ONLINE, AQUI NÃO INVESTES, MAIS SIM O SEU DINHEIRO MULTIPLICA.
+        </div>
+        <div class="scrolling-text">
+            COMDIRECT, SOMOS UM BANCO ALEMÃO, QUE ATUAMOS ATUALMENTE EM VÁRIAS MODALIDADES, INCLUINDO ONLINE, AQUI NÃO INVESTES, MAIS SIM O SEU DINHEIRO MULTIPLICA.
+        </div>
+    </div>
+
+    <div class="quick-actions-container">
+        <div class="quick-actions-grid">
+            
+            <a href="{% url 'deposito' %}" class="action-button">
+                <div class="action-icon-box">
+                    <img src="{% static 'comdirect/images/icon_deposito.png' %}" alt="Depósito">
+                </div>
+                Depósito
+            </a>
+            
+            <a href="{% url 'saque' %}" class="action-button">
+                <div class="action-icon-box">
+                    <img src="{% static 'comdirect/images/icon_saque.png' %}" alt="Saque">
+                </div>
+                Saque
+            </a>
+            
+            <a href="{% url 'tarefa' %}" class="action-button">
+                <div class="action-icon-box">
+                    <img src="{% static 'comdirect/images/icon_tarefa.png' %}" alt="Tarefa">
+                </div>
+                Tarefa
+            </a>
+
+            <a href="{% url 'equipa' %}" class="action-button">
+                <div class="action-icon-box">
+                    <img src="{% static 'comdirect/images/icon_equipa.png' %}" alt="Equipa">
+                </div>
+                Equipa
+            </a>
+            
+            </div>
+    </div>
+
+    <nav class="footer-nav">
+        
+        <a href="{% url 'premios_subsidios' %}" class="footer-item {% if request.resolver_match.url_name == 'premios_subsidios' %}active{% endif %}">
+            <div class="footer-item-content">
+                <img src="{% static 'comdirect/images/icon_premios.png' %}" alt="Prêmios">
+                <span>PRÊMIO</span>
+            </div>
+        </a>
+        
+        <a href="{% url 'nivel' %}" class="footer-item {% if request.resolver_match.url_name == 'nivel' %}active{% endif %}">
+            <div class="footer-item-content">
+                <img src="{% static 'comdirect/images/icon_nivel.png' %}" alt="Nivel">
+                <span>NÍVEL</span>
+            </div>
+        </a>
+        
+        <a href="{% url 'sobre' %}" class="footer-item {% if request.resolver_match.url_name == 'sobre' %}active{% endif %}">
+            <div class="footer-item-content">
+                <img src="{% static 'comdirect/images/icon_sobre.png' %}" alt="Sobre">
+                <span>SOBRE</span>
+            </div>
+        </a>
+        
+        <a href="{% url 'perfil' %}" class="footer-item {% if request.resolver_match.url_name == 'perfil' %}active{% endif %}">
+            <div class="footer-item-content">
+                <img src="{% static 'comdirect/images/icon_perfil.png' %}" alt="Perfil">
+                <span>PERFIL</span>
+            </div>
+        </a>
+        
+    </nav>
+    <script>
+        // Lógica do Carrossel de Imagens (Mantida)
+        const carouselImages = [
+            // Imagem 1: Imagem de exemplo da Cignea
+            "{% static 'comdirect/images/carousel_cigna_1.jpg' %}",
+            // Inclua mais imagens aqui:
+            "{% static 'comdirect/images/carousel_cigna_2.jpg' %}",
+            "{% static 'comdirect/images/carousel_cigna_3.jpg' %}",
+            "{% static 'comdirect/images/carousel_cigna_4.jpg' %}"
+        ];
+        
+        const carousel = document.getElementById('image-carousel');
+        let currentImageIndex = 0;
+
+        function updateCarouselImage() {
+            // Aplicar o estilo de fundo para a transição
+            carousel.style.backgroundImage = `url(${carouselImages[currentImageIndex]})`;
+            currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
+        }
+
+        // Inicia o carrossel imediatamente e depois a cada 5 segundos
+        updateCarouselImage();
+        setInterval(updateCarouselImage, 5000);
+
+        // Funções para Abrir e Fechar o Menu Lateral (Mantidas)
+        function openNav() {
+            document.getElementById("mySideMenu").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySideMenu").style.width = "0";
+        }
+
+        // LÓGICA DO MODAL DE BOAS-VINDAS (Mantida para aparecer sempre ao carregar)
+        const modal = document.getElementById('welcomeModal');
+
+        function showWelcomeModal() {
+            modal.style.display = 'flex';
+        }
+
+        function closeWelcomeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Garante que o modal apareça assim que o conteúdo da página for carregado
+        document.addEventListener('DOMContentLoaded', showWelcomeModal);
+    </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mudar Senha - comdirect</title>
+    <style>
+        /* --- Variáveis de Cores e Estilos --- */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
+
+        :root {
+            --cor-fundo-principal: #ffffff; /* Fundo Branco Puro */
+            --cor-card-fundo: #ffffff; /* Fundo do Card Branco */
+            --cor-borda-card: #e0e0e0;
+            --cor-texto-principal: #333333;
+            --cor-destaque-header: #007bff; /* Azul Primário para Header */
+            --cor-botao-primario: #007bff; /* Azul para o botão de ação */
+            --cor-botao-shadow: rgba(0, 123, 255, 0.5);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--cor-fundo-principal); /* Fundo Branco */
+            color: var(--cor-texto-principal);
+        }
+
+        /* --- CABEÇALHO E BOTÃO VOLTAR --- */
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 10px;
+            background-color: var(--cor-destaque-header);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 700;
+            padding: 5px;
+            transition: opacity 0.3s;
+        }
+        
+        .back-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .back-btn::before {
+            content: '← Voltar'; 
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        /* --- CONTAINER PRINCIPAL (O QUADRADO) --- */
+        .change-password-container {
+            background-color: var(--cor-card-fundo);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Sombra suave para destaque */
+            border: 1px solid var(--cor-borda-card);
+            width: 90%;
+            max-width: 500px;
+            margin-top: 30px;
+            margin-bottom: 50px;
+            text-align: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .change-password-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .change-password-container h2 {
+            color: var(--cor-destaque-header);
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.8em;
+            text-transform: uppercase;
+        }
+
+        /* --- FORMULÁRIO E INPUTS --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--cor-texto-principal);
+            font-size: 0.95em;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            color: var(--cor-texto-principal);
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--cor-destaque-header);
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+            outline: none;
+        }
+
+        /* --- BOTÃO SALVAR --- */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--cor-botao-primario);
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-transform: uppercase;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px var(--cor-botao-shadow);
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--cor-botao-shadow);
+        }
+        
+        /* --- MENSAGENS E RODAPÉ REMOVIDO --- */
+        .footer-nav {
+            display: none !important; 
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        <a href="{% url 'perfil' %}" class="back-btn"></a> 
+        <h1>Mudar Senha</h1>
+    </div>
+
+    <div class="change-password-container">
+        <h2>Alterar Senha</h2>
+        
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_current_password">Senha Atual:</label>
+                <input type="password" id="id_current_password" name="current_password" required>
+            </div>
+            <div class="form-group">
+                <label for="id_new_password">Nova Senha:</label>
+                <input type="password" id="id_new_password" name="new_password" minlength="4" required>
+            </div>
+            <div class="form-group">
+                <label for="id_confirm_new_password">Confirmar Nova Senha:</label>
+                <input type="password" id="id_confirm_new_password" name="confirm_new_password" minlength="4" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Alterar Senha</button>
+        </form>
+    </div>
+
+    </body>
+</html>

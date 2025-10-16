@@ -182,7 +182,7 @@
         win.close();
     }
 
-    function dismiCigna GroupeleteRelatedObjectPopup(win, objId) {
+    function dismissDeleteRelatedObjectPopup(win, objId) {
         const id = removePopupIndex(win.name.replace(/^delete_/, ''));
         const selectsSelector = interpolate('#%s, #%s_from, #%s_to', [id, id, id]);
         const selects = $(selectsSelector);
@@ -204,7 +204,7 @@
     window.updateRelatedObjectLinks = updateRelatedObjectLinks;
     window.dismissAddRelatedObjectPopup = dismissAddRelatedObjectPopup;
     window.dismissChangeRelatedObjectPopup = dismissChangeRelatedObjectPopup;
-    window.dismiCigna GroupeleteRelatedObjectPopup = dismiCigna GroupeleteRelatedObjectPopup;
+    window.dismissDeleteRelatedObjectPopup = dismissDeleteRelatedObjectPopup;
     window.dismissChildPopups = dismissChildPopups;
     window.relatedWindows = relatedWindows;
 

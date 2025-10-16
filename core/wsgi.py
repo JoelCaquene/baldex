@@ -1,5 +1,5 @@
 """
-WSGI config for CIGNA_GROUP project.
+WSGI config for comdirect project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

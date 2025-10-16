@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - comdirect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+        /* Definições de Cores e Variáveis, ajustadas para o visual clean do cadastro */
+        :root {
+            --cor-fundo-principal: #ffffff; /* Fundo branco */
+            --cor-card-fundo: #ffffff; /* Fundo do card branco */
+            --cor-borda-input: #ced4da; /* Borda clara do input */
+            --cor-placeholder: #6c757d; /* Cor do placeholder/texto secundário */
+            --cor-texto-principal: #343a40; /* Cor do texto principal */
+            
+            /* Cores do Gradiente do Botão e Logo */
+            --cor-destaque-1: #00ffc7; 
+            --cor-destaque-2: #ff007b; 
+            --cor-botao-entrar: linear-gradient(90deg, #00c7ff, #ff00c7); /* Gradiente do botão */
+            
+            --cor-shadow-card: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Alinha no topo */
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--cor-fundo-principal); /* Fundo Branco */
+            color: var(--cor-texto-principal);
+            position: relative;
+            padding-top: 50px; /* Espaço do topo */
+            
+            /* Remove estilos de fundo antigos */
+            background-image: none; 
+            background-attachment: initial;
+        }
+
+        /* Remove o efeito de fundo/blur */
+        body::before {
+            content: none;
+        }
+
+        /* Novo Estilo para o Logo (Copiado do Cadastro) */
+        .logo-container {
+            margin-bottom: 30px;
+            padding: 10px 30px;
+            background-color: #343434; /* Fundo preto/cinza escuro */
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 123, 0.5), 0 0 15px rgba(0, 230, 255, 0.5); /* Sombra neon discreta */
+        }
+        .logo-text {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* REMOVIDO: Oculta o estilo antigo do título da plataforma para evitar duplicidade */
+        .title-platform, @keyframes fadeInDown {
+            display: none; 
+        }
+
+        .container {
+            background: var(--cor-card-fundo);
+            padding: 30px;
+            border-radius: 5px; /* Bordas menos arredondadas */
+            text-align: center;
+            width: 90%;
+            max-width: 350px; /* Largura estreita para mobile */
+            box-shadow: none; /* Remove a sombra do container */
+            border: none; /* Remove a borda do container */
+            animation: none;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 1.5em; /* Título menor */
+            color: var(--cor-texto-principal);
+            font-weight: 600;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%; /* Ocupa a largura total */
+            padding: 10px 15px;
+            border: 1px solid var(--cor-borda-input);
+            border-radius: 5px;
+            background-color: var(--cor-card-fundo);
+            color: var(--cor-texto-principal);
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box; /* Garante que o padding não aumente a largura */
+        }
+
+        input::placeholder {
+            color: var(--cor-placeholder);
+            opacity: 1;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00c7ff;
+            box-shadow: 0 0 0 1px #00c7ff;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888; /* Cor cinza para o ícone */
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .toggle-password:hover {
+            color: var(--cor-destaque-2);
+        }
+        
+        /* Ajuste de padding para o input de senha ter espaço para o ícone */
+        #password {
+            padding-right: 40px; 
+        }
+
+
+        /* Botão ENTRAR com Gradiente e Borda Arredondada (Copiado do Cadastro) */
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #00c7ff, #ff00c7); /* Usando gradiente direto */
+            color: white;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: none;
+            margin-top: 15px;
+        }
+
+        button[type="submit"]:hover {
+            transform: none;
+            opacity: 0.9;
+            box-shadow: none;
+        }
+        
+        /* Link "Não tem uma conta? Cadastre-se" */
+        .link-cadastro {
+            display: block;
+            margin-top: 25px;
+            color: #6c757d; /* Cor cinza */
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .link-cadastro a {
+            color: #007bff; /* Azul padrão para link de "Cadastre-se" */
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .link-cadastro a:hover {
+            color: var(--cor-destaque-2);
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .messages li {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .messages li.success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .messages li.error {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="logo-text">COMDIRECT</div>
+    </div>
+    
+    <div class="container">
+        <h2>Entrar na sua conta</h2>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="tel" name="phone_number" placeholder="Número de Telefone" required>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" id="password" placeholder="Senha" required>
+                <i class="far fa-circle toggle-password" id="togglePassword"></i>
+            </div>
+            <button type="submit">ENTRAR</button>
+        </form>
+        
+        <p class="link-cadastro">
+            Não tem uma conta? <a href="{% url 'cadastro' %}" class="nav-link">Cadastre-se</a>
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#password');
+            
+            if (togglePassword && password) {
+                // Modificado para usar fa-circle/fa-eye, replicando a lógica do cadastro
+                togglePassword.addEventListener('click', function (e) {
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    this.classList.toggle('fa-circle');
+                    this.classList.toggle('fa-eye');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
