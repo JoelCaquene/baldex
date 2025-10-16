@@ -32,16 +32,14 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-q+)rh&425aq#(5#2l+7
 # DEBUG deve ser False em produção (Heroku)
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-# Domínios permitidos para acessar sua aplicação. No Heroku, usamos '*' 
-# para permitir o nome do host dinâmico do Heroku e URLs temporárias.
-# Em produção, o Django exige ALLOWED_HOSTS não vazio.
+# Domínios permitidos para acessar sua aplicação.
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 if 'DYNO' in os.environ:
     # No Heroku, é mais seguro permitir todos os hosts dinâmicos
     ALLOWED_HOSTS = ['*']
 # ----------------------------------------------------------------------
 
-# Aplicações adicionadas e apps para Cloudinary e WhiteNoise
+# Aplicações adicionadas
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,9 +51,8 @@ INSTALLED_APPS = [
     # Suas aplicações
     'comdirect', # O nome da sua aplicação que contém os modelos e views
 
-    # Apps de terceiros para deploy
-    'cloudinary_storage',
-    'cloudinary',
+    # APPS DE TERCEIROS: Apenas WhiteNoise
+    # Cloudinary e cloudinary_storage removidos conforme solicitação.
 ]
 
 MIDDLEWARE = [
@@ -152,17 +149,15 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Configuração de armazenamento de arquivos (WhiteNoise para estáticos, Cloudinary para mídia)
+# Configuração de armazenamento de arquivos
 # Use WhiteNoise para arquivos estáticos em produção (CSS, JS, etc.)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Use Cloudinary para arquivos de mídia (uploads de usuários)
+# Configuração de Mídia (Uploads de Utilizador):
+# ATENÇÃO: Os arquivos de mídia serão salvos no sistema de arquivos temporário do Heroku e serão perdidos após o restart/deploy.
 MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-
-# Configurações do Cloudinary
-CLOUDINARY_URL = os.getenv('CLOUDINARY_URL')
+MEDIA_ROOT = BASE_DIR / 'media'
+# DEFAULT_FILE_STORAGE é deixado no padrão (django.core.files.storage.FileSystemStorage)
 # ----------------------------------------------------------------------
 
 # Default primary key field type
@@ -180,12 +175,39 @@ LOGIN_URL = 'login'
 # AJUSTE PARA HEROKU: Segurança e Headers
 # ----------------------------------------------------------------------
 # Para segurança CSRF em produção
-# O uso de ALLOWED_HOSTS = ['*'] já cobre isso, mas é uma boa prática
-# ter esta configuração ou usar um padrão mais restritivo.
 CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
 
 # Configuração obrigatória para que o Heroku possa lidar com o HTTPS/SSL
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    # Pode adicionar outras configurações de segurança aqui (ex: SECURE_SSL_REDIRECT = True)
 # ----------------------------------------------------------------------
+```
+eof
+
+## Passo 10: Deploy Final para a Nova Aplicação
+
+Agora, vamos executar os comandos de deploy, garantindo que usamos o nome da aplicação e o remote corretos.
+
+### 1. Commit Final
+
+Se tiver havido alguma alteração local que ainda não foi comitada, faça o commit agora:
+
+```bash
+git add core/settings.py
+git commit -m "Configurações de deploy final e novo app Heroku"
+```
+
+### 2. Configuração da Chave Secreta na Nova Aplicação
+
+Copie e cole este comando para definir a chave secreta na sua **nova** aplicação (`comdirect-app-nova`):
+
+```bash
+heroku config:set DJANGO_SECRET_KEY='s$o3!Qf8pX7wZk9bLg1yM2eV4rJ5tHa6uI0eC7dNvB3mYqP8oRz' --app comdirect-app-nova
+```
+
+### 3. Deploy para o Novo Remote (`nova-heroku`)
+
+Agora, envie o código para a nova aplicação usando o remote `nova-heroku`:
+
+```bash
+git push nova-heroku main
