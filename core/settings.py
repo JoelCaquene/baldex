@@ -80,8 +80,9 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                # CORRIGIDO: Removido o item 'django.template.context_processors.messages' 
+                # que causava o ImportError no Django 5.x.
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.messages',
             ],
         },
     },
