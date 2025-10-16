@@ -181,33 +181,3 @@ CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # ----------------------------------------------------------------------
-```
-eof
-
-## Passo 10: Deploy Final para a Nova Aplicação
-
-Agora, vamos executar os comandos de deploy, garantindo que usamos o nome da aplicação e o remote corretos.
-
-### 1. Commit Final
-
-Se tiver havido alguma alteração local que ainda não foi comitada, faça o commit agora:
-
-```bash
-git add core/settings.py
-git commit -m "Configurações de deploy final e novo app Heroku"
-```
-
-### 2. Configuração da Chave Secreta na Nova Aplicação
-
-Copie e cole este comando para definir a chave secreta na sua **nova** aplicação (`comdirect-app-nova`):
-
-```bash
-heroku config:set DJANGO_SECRET_KEY='s$o3!Qf8pX7wZk9bLg1yM2eV4rJ5tHa6uI0eC7dNvB3mYqP8oRz' --app comdirect-app-nova
-```
-
-### 3. Deploy para o Novo Remote (`nova-heroku`)
-
-Agora, envie o código para a nova aplicação usando o remote `nova-heroku`:
-
-```bash
-git push nova-heroku main
