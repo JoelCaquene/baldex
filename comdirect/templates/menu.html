@@ -38,6 +38,12 @@
             --cor-footer-bg: #fff;
             --cor-footer-texto: #6c757d;
             --cor-footer-ativo: #2779bd; /* Azul Ativo (igual ao Status) */
+            
+            /* NOVAS VARIÁVEIS PARA O MODAL (Para restaurar o design antigo, se aplicável) */
+            --cor-modal-bg: #212529; 
+            --cor-modal-titulo: #00e6ff;
+            --cor-modal-texto: #f1f1f1;
+            --modal-shadow-neon: 0 0 15px rgba(0, 230, 255, 0.8), 0 0 25px rgba(255, 0, 199, 0.6);
         }
 
         /* Estilos Globais e do Body (Padrão para Telefone) */
@@ -278,11 +284,9 @@
             color: var(--cor-footer-ativo);
         }
 
-        /* --- Estilos do Modal de Boas-Vindas (Manter Lógica Existente) --- */
-        /* Mantemos os estilos do Modal para que a funcionalidade não quebre */
+        /* --- Estilos do Modal de Boas-Vindas (RESTAURADO) --- */
         .modal {
-            /* ... (Seus estilos de modal existentes) ... */
-            display: none; /* Inicia escondido */
+            display: none; 
             position: fixed;
             z-index: 1001;
             left: 0;
@@ -290,39 +294,62 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.6);
+            background-color: rgba(0,0,0,0.8); /* Fundo mais escuro */
             padding-top: 50px;
+            backdrop-filter: blur(5px);
         }
         .modal-content {
-            /* ... (Seus estilos de modal content existentes) ... */
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            background-color: var(--cor-modal-bg); /* Fundo escuro */
+            color: var(--cor-modal-texto);
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 15px;
+            width: 85%;
+            max-width: 350px;
+            box-shadow: var(--modal-shadow-neon); /* Sombra neon */
             position: relative;
+            text-align: center;
+            border: 2px solid var(--cor-modal-titulo);
+            animation: fadeIn 0.5s;
+        }
+        .modal-content h4 {
+            color: var(--cor-modal-titulo); /* Título neon */
+            font-size: 20px;
+            font-weight: 800;
+            margin-top: 0;
+        }
+        .modal-content p {
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: justify;
         }
         .close-btn {
-            /* ... (Seus estilos de close-btn existentes) ... */
-            color: #aaa;
-            float: right;
-            font-size: 28px;
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 30px;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.2s;
         }
-        /* ... outros estilos de modal se houverem ... */
+        .close-btn:hover, .close-btn:focus {
+            color: var(--cor-modal-titulo);
+            text-decoration: none;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
     </style>
 </head>
 <body>
 
     <div class="carousel-container">
         <div id="image-carousel" style="background-image: url('{% static 'comdirect/images/image1.jpg' %}');">
-            </div>
+        </div>
         <div class="carousel-dots" id="carousel-dots">
-            </div>
+        </div>
     </div>
 
     <div class="security-alert">
@@ -410,13 +437,27 @@
     <div id="welcomeModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h4>Bem-vindo(a) à comdirect!</h4>
-            <p>Seu pop-up de boas-vindas deve aparecer aqui, com a mesma lógica de antes (usando cookies ou localStorage).</p>
+            <h4>Bem-vindo(a) ao Mundo comdirect!</h4>
+            <p>
+                A comdirect agradece por se juntar à nossa plataforma de investimentos. 
+                Para qualquer dúvida ou suporte, pedimos que entre em contato imediatamente com o 
+                nosso canal de atendimento oficial através do link de **Whatsapp** ou **Telegram** abaixo.
+            </p>
+            <p style="font-weight: 700; color: var(--cor-modal-titulo);">
+                Avisamos que o pop-up de boas-vindas será exibido a cada login para garantir que você tenha acesso aos links de suporte.
+            </p>
+            
+            <a href="{{ config.link_grupo_whatsapp|default:'#' }}" target="_blank" style="display: block; margin: 10px 0; padding: 10px; background-color: #25D366; color: white; text-decoration: none; border-radius: 5px; font-weight: 700;">
+                <i class="fab fa-whatsapp"></i> SUPORTE WHATSAPP
+            </a>
+            <a href="{{ config.link_grupo_telegram|default:'#' }}" target="_blank" style="display: block; padding: 10px; background-color: #0088cc; color: white; text-decoration: none; border-radius: 5px; font-weight: 700;">
+                <i class="fab fa-telegram-plane"></i> SUPORTE TELEGRAM
+            </a>
         </div>
     </div>
 
     <script>
-        // --- Lógica do Carrossel (Simplesmente mudando a imagem) ---
+        // --- Lógica do Carrossel (Manutenção) ---
         const carousel = document.getElementById('image-carousel');
         const dotsContainer = document.getElementById('carousel-dots');
         
@@ -454,36 +495,20 @@
         carousel.style.backgroundImage = `url('${images[0]}')`;
 
 
-        // --- Lógica do Modal de Boas-Vindas (MANTIDA) ---
+        // --- Lógica do Modal de Boas-Vindas (CORRIGIDA) ---
         const modal = document.getElementById("welcomeModal");
-
-        // Função para verificar se o usuário já viu o modal
-        function hasSeenWelcome() {
-            // Se você usa Django Sessions, Cookies ou localStorage, a lógica permanece aqui.
-            // Exemplo simples com localStorage:
-            return localStorage.getItem('welcomedUser') === 'true';
-        }
-
-        // Função para exibir o modal
-        function showModal() {
-            modal.style.display = "block";
-        }
 
         // Função para fechar o modal
         function closeModal() {
             modal.style.display = "none";
-            // Define que o usuário já viu o modal (MANTENDO A LÓGICA ORIGINAL)
-            localStorage.setItem('welcomedUser', 'true');
+            // *** IMPORTANTE: REMOVIDA A LINHA 'localStorage.setItem('welcomedUser', 'true')' ***
+            // Isso garante que o pop-up aparecerá a cada carregamento/login.
         }
 
         // Lógica para mostrar o modal ao carregar a página
         window.onload = function() {
-            // Garante que a lógica do pop-up de boas-vindas original é mantida
-            if (!hasSeenWelcome()) {
-                // Se a lógica original de exibição não for baseada em localStorage,
-                // você deve substituí-la aqui para garantir a permanência da lógica.
-                showModal(); 
-            }
+            // Não há verificação de 'hasSeenWelcome', o que garante a exibição sempre.
+            modal.style.display = "block"; 
         }
 
         // Fecha o modal se o usuário clicar fora dele
