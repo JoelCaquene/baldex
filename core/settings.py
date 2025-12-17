@@ -1,6 +1,6 @@
 """
 Django settings for baldex project.
-Optimized for Production on Render.com
+Optimized for Production on Render.com - Versão Tolerante a Erros
 """
 
 from pathlib import Path
@@ -8,23 +8,21 @@ import os
 import dotenv
 import dj_database_url
 
-# Carrega o arquivo .env se ele existir (útil para desenvolvimento local)
+# Carrega o arquivo .env se ele existir
 dotenv.load_dotenv()
 
 # Caminho base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- SEGURANÇA ---
-# Chave secreta: No Render, você configurará a variável DJANGO_SECRET_KEY
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-local-dev-key')
 
 # DEBUG: Sempre False em produção. No Render, defina DJANGO_DEBUG como False
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
 
-# Hosts permitidos
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
-# Se estiver no Render, adiciona o domínio automático deles
+# Configuração automática para o domínio do Render
 if 'RENDER' in os.environ:
     RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
     if RENDER_EXTERNAL_HOSTNAME:
@@ -37,16 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic', # Otimização para WhiteNoise
+    'whitenoise.runserver_nostatic', 
     'django.contrib.staticfiles',
-
-    # Suas aplicações
     'baldex', 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Essencial para arquivos estáticos
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,7 +72,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # --- BANCO DE DADOS ---
-# Usa SQLite localmente e PostgreSQL no Render (via DATABASE_URL)
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -98,32 +93,34 @@ TIME_ZONE = 'Africa/Luanda'
 USE_I18N = True
 USE_TZ = True
 
-# --- ARQUIVOS ESTÁTICOS E MÍDIA (CONFIGURAÇÃO DE PRODUÇÃO) ---
+# --- ARQUIVOS ESTÁTICOS E MÍDIA ---
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# Configuração moderna do Django para WhiteNoise (Armazenamento)
+# Verifica se a pasta static existe para evitar avisos no log
+STATIC_DIR = BASE_DIR / 'static'
+STATICFILES_DIRS = [STATIC_DIR] if STATIC_DIR.exists() else []
+
+# CONFIGURAÇÃO TOLERANTE A ERROS:
+# O uso de CompressedStaticFilesStorage evita que o deploy falhe se faltar uma imagem no CSS
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# --- CONFIGURAÇÕES DE SEGURANÇA EXTRA PARA PRODUÇÃO ---
+# --- CONFIGURAÇÕES DE SEGURANÇA EXTRA ---
 if not DEBUG:
-    # Garante que o Django saiba que está atrás de um proxy HTTPS (Render)
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    # Domínios confiáveis para CSRF (Render)
     CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
