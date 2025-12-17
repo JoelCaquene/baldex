@@ -1,5 +1,5 @@
 """
-WSGI config for comdirect project.
+WSGI config for baldex project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

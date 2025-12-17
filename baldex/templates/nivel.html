@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Níveis - Baldex</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+        :root {
+            /* Tema Azul Escuro */
+            --cor-fundo-principal: #0a192f; 
+            --cor-card-fundo: #112240; 
+            --cor-borda-card: #233554; 
+            --cor-destaque-1: #64ffda; /* Ciano/Verde neon para contraste */
+            --cor-destaque-2: #f0f0f0; 
+            --cor-texto-claro: #e6f1ff; 
+            --cor-texto-escuro: #8892b0; 
+            --cor-botao-comprar: #28a745; 
+            --cor-shadow-card: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
+        }
+
+        body {
+            background-color: var(--cor-fundo-principal);
+            color: var(--cor-texto-claro);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .header {
+            width: 100%;
+            padding: 15px 20px;
+            color: var(--cor-texto-claro);
+            position: sticky;
+            top: 0;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            background: rgba(10, 25, 47, 0.85); 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--cor-borda-card);
+            z-index: 10;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.2em;
+            flex-grow: 1;
+            text-align: center;
+            margin-right: 30px; /* Compensação do botão voltar */
+        }
+
+        .back-btn {
+            font-size: 24px;
+            text-decoration: none;
+            color: var(--cor-destaque-1);
+            cursor: pointer;
+            width: 30px;
+            display: flex;
+            transition: transform 0.2s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-3px);
+        }
+
+        .levels-display-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .levels-display-container h2 {
+            color: var(--cor-destaque-1); 
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .levels-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        /* Cartão Pequeno e Compacto */
+        .level-card-item {
+            background: var(--cor-card-fundo);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: var(--cor-shadow-card);
+            border: 1px solid var(--cor-borda-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .level-card-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--cor-destaque-1);
+        }
+
+        /* Ícone de Motorizada */
+        .motorizada-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px var(--cor-destaque-1));
+        }
+
+        .level-card-item h3 {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: var(--cor-destaque-1); 
+            text-transform: uppercase;
+        }
+
+        .level-info {
+            width: 100%;
+            font-size: 0.85em;
+            text-align: left;
+            margin: 10px 0;
+            border-top: 1px solid var(--cor-borda-card);
+            padding-top: 10px;
+        }
+
+        .level-info p {
+            margin: 4px 0;
+            color: var(--cor-texto-escuro);
+        }
+
+        .level-info strong {
+            color: var(--cor-texto-claro);
+        }
+
+        .buy-btn {
+            background: transparent;
+            color: var(--cor-destaque-1);
+            padding: 8px 15px;
+            border: 1.5px solid var(--cor-destaque-1);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .buy-btn:hover {
+            background: rgba(100, 255, 218, 0.1);
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.2);
+        }
+
+        .no-levels-message {
+            color: var(--cor-texto-escuro);
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+
+        @media (max-width: 400px) {
+            .levels-grid-container {
+                grid-template-columns: 1fr 1fr; /* Força 2 colunas em celulares pequenos */
+                gap: 10px;
+            }
+            .level-card-item { padding: 10px; }
+            .level-card-item h3 { font-size: 0.9em; }
+            .level-info { font-size: 0.75em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a onclick="history.back()" class="back-btn">&#x2190;</a> 
+        <h1>Níveis</h1>
+    </div>
+
+    <div class="levels-display-container">
+        <h2>Níveis Disponíveis</h2>
+        <div class="levels-grid-container">
+            {% if niveis %}
+                {% for nivel in niveis %}
+                    <div class="level-card-item" data-id="{{ nivel.id }}">
+                        
+                        <div class="motorizada-icon">
+                            {% if forloop.counter == 1 %}🛵
+                            {% elif forloop.counter == 2 %}🏍️
+                            {% elif forloop.counter == 3 %}🏎️
+                            {% else %}🚲{% endif %}
+                        </div>
+
+                        <h3>{{ nivel.nome_nivel }}</h3>
+                        
+                        <div class="level-info">
+                            <p>Mín: <strong>KZ {{ nivel.deposito_minimo }}</strong></p>
+                            <p>Dia: <strong>KZ {{ nivel.ganho_diario }}</strong></p>
+                            <p>Ciclo: <strong>{{ nivel.ciclo_dias }} d</strong></p>
+                        </div>
+
+                        <button class="buy-btn" data-id="{{ nivel.id }}">Alugar</button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-levels-message">Nenhum nível disponível no momento.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const buyButtons = document.querySelectorAll('.buy-btn');
+
+            buyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const nivelId = this.getAttribute('data-id');
+                    
+                    fetch('/alugar-nivel/', { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ 'nivel_id': nivelId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert(data.message);
+                            window.location.reload(); 
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Ocorreu um erro ao tentar alugar o nível.');
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

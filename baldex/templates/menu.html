@@ -1,0 +1,438 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - baldex</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Importa a fonte Montserrat */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
+        /* Variáveis CSS para Cores e Sombras */
+        :root {
+            --cor-fundo: #1a1a2e; 
+            --cor-texto: #ffffff;
+            --cor-sombra: 0 4px 12px rgba(0, 0, 0, 0.4);
+            
+            /* CORES DO BLOCO DE STATUS */
+            --cor-status-bg-azul: #2779bd; 
+            --cor-status-texto-claro: #fff;
+            --cor-valor-destaque: #ffeb3b; 
+
+            /* CORES DOS BOTÕES */
+            --cor-botao-deposito-bg: #ffc107; 
+            --cor-botao-saque-bg: #17a2b8; 
+            --cor-botao-texto: #333333; 
+            --cor-botao-texto-escuro: #fff;
+            --cor-botao-icone: #fff;
+
+            /* Menu de ícones */
+            --cor-menu-icones-bg: #202c40; 
+            --cor-menu-icone: #fff; 
+            --cor-menu-icone-sombra: 0 0 12px rgba(0, 230, 255, 0.8);
+            --cor-menu-texto: #ffffff; 
+
+            /* Cores do Rodapé */
+            --cor-footer-bg: #27273d; 
+            --cor-footer-texto: #9fa8a3;
+            --cor-footer-ativo: #ffeb3b; 
+            
+            /* Estilos do NOVO Modal */
+            --modal-gradient: linear-gradient(145deg, #1e1e30, #121212);
+            --cor-modal-borda: #00e6ff;
+            --cor-whatsapp: #25D366;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 65px; 
+        }
+
+        /* --- Carrossel --- */
+        .carousel-container {
+            width: 100%;
+            height: 200px; 
+            margin-top: 0; 
+            overflow: hidden;
+            position: relative;
+        }
+        #image-carousel {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 10px; 
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+        .dot {
+            height: 6px;
+            width: 6px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+        .dot.active {
+            opacity: 1;
+        }
+
+        /* --- Alerta / Frases --- */
+        .security-alert {
+            width: 90%;
+            max-width: 450px;
+            background-color: var(--cor-menu-icones-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 0 10px rgba(0, 230, 255, 0.2);
+            height: 40px;
+        }
+        .security-alert i {
+            color: var(--cor-valor-destaque);
+            margin-right: 10px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .motto-scroller {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        /* --- Bloco de Status Centralizado --- */
+        .main-content-block {
+            width: 90%;
+            max-width: 450px;
+            margin: 15px auto;
+        }
+        .status-info-card {
+            background-color: var(--cor-status-bg-azul);
+            border-radius: 8px;
+            padding: 20px;
+            color: var(--cor-status-texto-claro);
+            text-align: left;
+            box-shadow: var(--cor-sombra);
+        }
+        .status-info-card .label { font-size: 12px; font-weight: 600; margin-bottom: 5px; }
+        .status-info-card .value-main { font-size: 28px; font-weight: 800; color: var(--cor-valor-destaque); margin-bottom: 10px; }
+        .status-info-card .level-label { font-size: 12px; font-weight: 600; margin-top: 5px; }
+        .status-info-card .level-value { font-size: 18px; font-weight: 700; color: var(--cor-valor-destaque); }
+
+        /* --- Menu de Ícones --- */
+        .icon-menu-container {
+            width: 90%;
+            max-width: 450px;
+            background-color: var(--cor-menu-icones-bg);
+            border-radius: 12px;
+            padding: 15px 0;
+            margin: 15px auto;
+            box-shadow: 0 0 25px rgba(0, 230, 255, 0.3);
+            border: 2px solid rgba(0, 230, 255, 0.3);
+        }
+        .icon-menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--cor-menu-texto);
+            font-size: 12px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .action-button i {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 50px; height: 50px; 
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; margin-bottom: 5px;
+            box-shadow: var(--cor-menu-icone-sombra);
+            border: 2px solid var(--cor-modal-borda); 
+        }
+
+        .fa-wallet-menu { color: #ffc107; }
+        .fa-medal { color: var(--cor-valor-destaque); }
+
+        /* --- Rodapé Fixo --- */
+        .fixed-footer {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background-color: var(--cor-footer-bg);
+            padding: 5px 0; display: flex; justify-content: space-around;
+            z-index: 1000; box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .footer-item {
+            display: flex; flex-direction: column; align-items: center;
+            text-decoration: none; color: var(--cor-footer-texto);
+            font-size: 10px; font-weight: 600; flex: 1;
+        }
+        .footer-item i { font-size: 22px; margin-bottom: 2px; }
+        .footer-item.active { color: var(--cor-footer-ativo); }
+        .footer-item.active i { color: var(--cor-footer-ativo); }
+
+        /* --- ESTILIZAÇÃO DO MODAL DE BOAS-VINDAS --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85); 
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--modal-gradient);
+            padding: 40px 25px;
+            border-radius: 25px;
+            width: 85%;
+            max-width: 350px;
+            text-align: center;
+            position: relative;
+            border: 2px solid var(--cor-modal-borda);
+            box-shadow: 0 0 30px rgba(0, 230, 255, 0.4);
+            animation: modalFadeIn 0.5s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .modal-icon-header {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 230, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border: 2px solid var(--cor-modal-borda);
+        }
+
+        .modal-icon-header i {
+            font-size: 40px;
+            color: var(--cor-modal-borda);
+            animation: pulseIcon 2s infinite;
+        }
+
+        @keyframes pulseIcon {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .modal-content h2 {
+            font-size: 22px;
+            margin: 10px 0;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .modal-content p {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .btn-whatsapp-premium {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--cor-whatsapp);
+            color: #fff;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-whatsapp-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp-premium i {
+            font-size: 24px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="carousel-container">
+        <div id="image-carousel"></div>
+        <div class="carousel-dots" id="carousel-dots"></div>
+    </div>
+
+    <div class="security-alert">
+        <i class="fas fa-bullhorn"></i>
+        <div class="motto-scroller" id="motto-scroller"></div>
+    </div>
+
+    <div class="main-content-block">
+        <div class="status-info-card">
+            <div class="label">DEPOSITO APROVADO</div>
+            <div class="value-main">
+                {{ depositos_aprovados|floatformat:2|default:"0,00" }} KZ
+            </div>
+            
+            <div class="level-label">NIVEL DO CLIENTE</div>
+            <div class="level-value">
+                {% if nivel_cliente == "Nível Básico (Sem nível alugado)" %}
+                    Básico
+                {% else %}
+                    {{ nivel_cliente|default:"Básico" }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="icon-menu-container">
+        <div class="icon-menu-grid">
+            <a href="{% url 'tarefa' %}" class="action-button">
+                <i class="fas fa-hammer"></i> Taréfa
+            </a>
+
+            <a href="{% url 'deposito' %}" class="action-button">
+                <i class="fas fa-wallet fa-wallet-menu"></i> Depósito
+            </a>
+
+            <a href="{% url 'nivel' %}" class="action-button">
+                <i class="fas fa-trophy"></i> Nível
+            </a>
+
+            <a href="{% url 'premios_subsidios' %}" class="action-button">
+                <i class="fas fa-medal"></i> Prémio
+            </a>
+        </div>
+    </div>
+
+    <div class="fixed-footer">
+        <a href="{% url 'perfil' %}" class="footer-item {% if request.resolver_match.view_name == 'perfil' %}active{% endif %}">
+            <i class="fas fa-user-circle" style="color: #4CAF50;"></i> Perfil
+        </a>
+
+        <a href="{% url 'editar_perfil' %}" class="footer-item {% if request.resolver_match.view_name == 'editar_perfil' %}active{% endif %}">
+            <i class="fas fa-university" style="color: #ff9800;"></i> Editar IBAN
+        </a>
+        
+        <a href="{% url 'saque' %}" class="footer-item {% if request.resolver_match.view_name == 'saque' %}active{% endif %}">
+            <i class="fas fa-exchange-alt" style="color: #17a2b8;"></i> Saque
+        </a>
+
+        <a href="{% url 'equipa' %}" class="footer-item {% if request.resolver_match.view_name == 'equipa' %}active{% endif %}">
+            <i class="fas fa-users" style="color: #9c27b0;"></i> Equipa
+        </a>
+    </div>
+
+    <div id="welcomeModal" class="modal" style="display: flex;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-icon-header">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2>Seja Bem-vindo!</h2>
+            <p>Sua segurança é nossa prioridade. Para qualquer dúvida ou suporte técnico, utilize nosso canal oficial abaixo:</p>
+            
+            <a href="{{ config.link_grupo_whatsapp|default:'#' }}" target="_blank" class="btn-whatsapp-premium">
+                <i class="fab fa-whatsapp"></i>
+                SUPORTE WHATSAPP
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // --- Carrossel de Imagens ---
+        const images = ["{% static 'baldex/images/image1.jpg' %}", "{% static 'baldex/images/image2.jpg' %}"];
+        let currentIdx = 0;
+        const carousel = document.getElementById('image-carousel');
+        const dotsContainer = document.getElementById('carousel-dots');
+
+        images.forEach((_, i) => {
+            const dot = document.createElement('span');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dotsContainer.appendChild(dot);
+        });
+
+        function updateCarousel() {
+            carousel.style.backgroundImage = `url('${images[currentIdx]}')`;
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentIdx));
+            currentIdx = (currentIdx + 1) % images.length;
+        }
+        setInterval(updateCarousel, 5000);
+        updateCarousel();
+
+        // --- Frases ---
+        const mottos = ["Baldex: a sua marca segura e confiavel.", "Invista na sua plataforma de momento.", "Seja bem vindo na Baldex."];
+        let mottoIdx = 0;
+        function updateMotto() {
+            const scroller = document.getElementById('motto-scroller');
+            scroller.style.opacity = 0;
+            setTimeout(() => {
+                scroller.textContent = mottos[mottoIdx];
+                scroller.style.opacity = 1;
+                mottoIdx = (mottoIdx + 1) % mottos.length;
+            }, 500);
+        }
+        setInterval(updateMotto, 4000);
+        updateMotto();
+
+        // --- Modal ---
+        const modal = document.getElementById("welcomeModal");
+        function closeModal() { 
+            modal.style.opacity = "0";
+            setTimeout(() => { modal.style.display = "none"; }, 300);
+        }
+        window.onclick = (event) => { if (event.target == modal) closeModal(); }
+    </script>
+</body>
+</html>

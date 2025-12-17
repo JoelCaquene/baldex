@@ -5,5 +5,5 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('comdirect.urls')),  # Esta linha direciona a URL raiz para as URLs do seu app
+    path('', include('baldex.urls')),  # Esta linha direciona a URL raiz para as URLs do seu app
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalho - Baldex</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Poppins:wght@400;600;700&display=swap');
+        :root {
+            --dark-bg: #0a192f;
+            --primary-color: #ffd700;
+            --success-color: #4ade80; 
+            --task-done-color: #f87171;
+            --text-light: #e6f1ff;
+            --card-bg: rgba(17, 34, 64, 0.8);
+            --glow-color: rgba(255, 215, 0, 0.3);
+        }
+        body { background-color: var(--dark-bg); color: var(--text-light); font-family: 'Poppins', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(10, 25, 47, 0.9); position: fixed; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 215, 0, 0.1); }
+        .back-button { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .main-content { margin-top: 120px; width: 90%; max-width: 400px; text-align: center; }
+        .moto-display { width: 220px; height: 220px; border-radius: 50%; background: var(--card-bg); border: 4px solid var(--primary-color); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0 auto 30px; }
+        .moto-image { width: 120px; }
+        .status-badge { padding: 5px 15px; border-radius: 20px; background: rgba(74, 222, 128, 0.1); color: var(--success-color); border: 1px solid var(--success-color); font-weight: bold; margin-top: 10px; }
+        .status-badge.concluido { background: rgba(248, 113, 113, 0.1); color: var(--task-done-color); border-color: var(--task-done-color); }
+        
+        #receive-gain-btn { width: 100%; background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); color: #000; border: none; padding: 20px; border-radius: 15px; font-size: 1.3em; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        
+        #receive-gain-btn:disabled { background: #233554 !important; color: #8892b0 !important; cursor: not-allowed; box-shadow: none; opacity: 0.7; }
+        .message { margin-top: 20px; color: #8892b0; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="{% url 'menu' %}" class="back-button"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <span style="color:var(--primary-color); font-weight:900;">BALDEX MOTO</span>
+        <div style="width:50px;"></div>
+    </div>
+
+    <div class="main-content">
+        <div class="moto-display">
+            <img src="https://cdn-icons-png.flaticon.com/512/1714/1714412.png" class="moto-image">
+            <div id="status-badge" class="status-badge">VERIFICANDO...</div>
+        </div>
+
+        <button id="receive-gain-btn" disabled>
+            <i class="fas fa-motorcycle"></i> <span id="btn-text">PAGA TAXI</span>
+        </button>
+        
+        <div class="message" id="info-message">Sincronizando com o servidor de Angola...</div>
+    </div>
+
+    <script>
+        // CAPTURA O ESTADO REAL DO SERVIDOR
+        const podeFazerTarefa = {{ pode_realizar_tarefa|yesno:"true,false" }};
+        const hasLevel = {{ has_level|yesno:"true,false" }};
+
+        const btn = document.getElementById('receive-gain-btn');
+        const btnText = document.getElementById('btn-text');
+        const statusBadge = document.getElementById('status-badge');
+        const infoMsg = document.getElementById('info-message');
+
+        function inicializarPagina() {
+            if (!hasLevel) {
+                statusBadge.textContent = "SEM MOTO";
+                statusBadge.classList.add('concluido');
+                btnText.textContent = "NÍVEL INATIVO";
+                infoMsg.textContent = "Alugue uma motorizada para começar.";
+                btn.disabled = true;
+                return;
+            }
+
+            if (podeFazerTarefa) {
+                // LIBERADO PARA GANHAR
+                statusBadge.textContent = "SISTEMA ATIVO";
+                btn.disabled = false;
+                btnText.textContent = "PAGA TAXI";
+                infoMsg.textContent = "Clique para receber o seu ganho diário.";
+            } else {
+                // JÁ FEZ HOJE - BLOQUEADO
+                statusBadge.textContent = "PAGO HOJE";
+                statusBadge.classList.add('concluido');
+                btn.disabled = true;
+                btnText.textContent = "SERVIÇO CONCLUÍDO";
+                infoMsg.textContent = "Limite diário atingido. Volte amanhã após a meia-noite.";
+            }
+        }
+
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            btnText.textContent = "PROCESSANDO...";
+            
+            try {
+                const response = await fetch('{% url "realizar_tarefa" %}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    statusBadge.textContent = "SUCESSO!";
+                    infoMsg.innerHTML = `<b style="color:var(--success-color)">${data.message}</b>`;
+                    // Recarrega para bloquear o botão e atualizar o saldo
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    btn.disabled = false;
+                    btnText.textContent = "TENTAR NOVAMENTE";
+                    infoMsg.innerHTML = `<b style="color:var(--task-done-color)">${data.message}</b>`;
+                }
+            } catch (error) {
+                btn.disabled = false;
+                btnText.textContent = "ERRO DE CONEXÃO";
+                infoMsg.textContent = "Verifique a sua internet.";
+            }
+        });
+
+        // Executa ao carregar
+        inicializarPagina();
+    </script>
+</body>
+</html>

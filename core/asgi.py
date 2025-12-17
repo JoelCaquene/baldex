@@ -1,5 +1,5 @@
 """
-ASGI config for comdirect project.
+ASGI config for baldex project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

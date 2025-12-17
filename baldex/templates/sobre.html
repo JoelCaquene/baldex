@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quem Somos? - baldex</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap'); /* Fonte adicional para o título */
+
+        :root {
+            --cor-fundo-principal: #FFFFFF; /* Fundo Branco */
+            --cor-card-fundo: rgba(255, 255, 255, 0.95); /* Card quase branco e semi-transparente */
+            --cor-texto-escuro: #333333;
+            --cor-destaque-ouro: #FFD700; /* Ouro */
+            --cor-sombra-ouro: rgba(255, 215, 0, 0.8);
+            --cor-borda-card: #CCCCCC;
+            --cor-link: #1E90FF; /* Azul para links */
+            --cor-icon-verde: #4CAF50; /* Verde para WhatsApp */
+            --cor-icon-azul: #0088CC; /* Azul para Telegram */
+        }
+
+        body {
+            background-color: var(--cor-fundo-principal);
+            color: var(--cor-texto-escuro);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Remove background effects */
+        body::before {
+            content: none;
+        }
+
+        .header {
+            width: 100%;
+            padding: 15px;
+            background: var(--cor-fundo-principal);
+            border-bottom: 1px solid #EEEEEE;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Botão Voltar no Cabeçalho (Esquerda) */
+        .btn-back {
+            background: none;
+            border: none;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--cor-texto-escuro);
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 5px 10px;
+        }
+
+        .btn-back:hover {
+            color: var(--cor-destaque-ouro);
+        }
+
+        /* Ajuste para o título ser o centro entre o botão voltar e os links */
+        .header-title {
+            text-align: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8em;
+            font-weight: 900;
+            color: var(--cor-destaque-ouro);
+            text-shadow: 0 0 5px var(--cor-sombra-ouro), 0 0 10px rgba(255, 215, 0, 0.5);
+            letter-spacing: 2px;
+            margin: 0 10px;
+            flex-grow: 1; /* Permite que ocupe o espaço central */
+        }
+        
+        /* Contatos no Cabeçalho (Direita) */
+        .header-contact-links {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Reduzi o espaço para caber melhor */
+        }
+        
+        .header-contact-link {
+            /* Transformando o link em um botão de ícone */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            width: 34px; /* Tamanho do círculo/botão */
+            height: 34px;
+            border-radius: 50%;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            /* Adicionado um fundo sutil para melhor visibilidade */
+            background-color: #f0f0f0; 
+        }
+
+        .header-contact-link.whatsapp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px var(--cor-icon-verde);
+            background-color: #E6FFE6;
+        }
+        
+        .header-contact-link.telegram:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px var(--cor-icon-azul);
+            background-color: #E6F3FF;
+        }
+
+        .header-contact-icon {
+            width: 22px; /* Tamanho do ícone dentro do círculo */
+            height: 22px;
+        }
+        
+        /* Resto do corpo do conteúdo */
+        .about-container {
+            width: 90%;
+            max-width: 700px;
+            background: var(--cor-card-fundo);
+            border-radius: 15px;
+            border: 1px solid var(--cor-borda-card);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px 20px;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            text-align: left;
+            line-height: 1.6;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .about-content h2, .about-content h3 {
+            color: var(--cor-texto-escuro);
+            text-align: left;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            font-size: 1.5em;
+            font-weight: 700;
+            border-bottom: 2px solid var(--cor-destaque-ouro);
+            padding-bottom: 5px;
+            text-shadow: none;
+        }
+        
+        .about-content h1 {
+            font-size: 2em;
+            color: var(--cor-destaque-ouro);
+            text-align: center;
+            margin-bottom: 1em;
+            font-weight: 900;
+        }
+
+        .about-content p {
+            font-size: 1em;
+            color: var(--cor-texto-escuro);
+            margin-bottom: 1em;
+            white-space: pre-wrap;
+        }
+        
+        .about-content p strong, .about-content p b {
+            color: var(--cor-texto-escuro);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="btn-back" onclick="history.back()">&#8592;</button>
+        
+        <h1 class="header-title">QUEM SOMOS?</h1>
+
+        {% if contato.link_telegram or contato.link_whatsapp %}
+        <div class="header-contact-links">
+            {% if contato.link_telegram %}
+            <a href="{{ contato.link_telegram }}" target="_blank" class="header-contact-link telegram" title="Telegram">
+                <img src="{% static 'baldex/images/icon_telegram.png' %}" alt="Telegram" class="header-contact-icon">
+            </a>
+            {% endif %}
+            {% if contato.link_whatsapp %}
+            <a href="{{ contato.link_whatsapp }}" target="_blank" class="header-contact-link whatsapp" title="WhatsApp">
+                <img src="{% static 'baldex/images/icon_whatsapp.png' %}" alt="WhatsApp" class="header-contact-icon">
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </header>
+
+    <div class="about-container">
+        <div class="about-content">
+            {% if sobre_texto %}
+                {{ sobre_texto|safe }}
+            {% else %}
+                <h3 style="text-align: center;">Conteúdo "Quem Somos?" não disponível.</h3>
+                <p style="text-align: center;">Por favor, adicione o texto no painel de administração do Django.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

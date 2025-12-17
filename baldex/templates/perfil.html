@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - baldex</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+        /* Cores e Variáveis - Tema Dark Moderno */
+        :root {
+            --cor-principal: #00b0ff;
+            --cor-fundo: #0a192f;
+            --cor-card: #112240;
+            --cor-texto: #e6f1ff;
+            --cor-texto-secundario: #8892b0;
+            --cor-borda: #233554;
+            --cor-destaque: #64ffda;
+            --cor-vermelho: #ff4d4d;
+            --sombra: 0 10px 30px rgba(2, 12, 27, 0.5);
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- CABEÇALHO --- */
+        .header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px;
+            background-color: var(--cor-card);
+            border-bottom: 1px solid var(--cor-borda);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            text-decoration: none;
+            color: var(--cor-principal);
+            font-size: 1.2em;
+            transition: transform 0.2s;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.4em;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* --- CONTAINER PRINCIPAL --- */
+        .profile-container {
+            width: 90%;
+            max-width: 450px;
+            margin-top: 25px;
+            padding-bottom: 100px;
+        }
+
+        /* --- CARDS DE SALDO --- */
+        .income-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .income-item {
+            background: var(--cor-card);
+            padding: 20px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--cor-borda);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: var(--sombra);
+        }
+
+        .income-item i {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .income-item strong {
+            font-size: 0.75em;
+            color: var(--cor-texto-secundario);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .value-display {
+            font-size: 1.1em;
+            font-weight: 800;
+        }
+
+        .positive-value { color: var(--cor-destaque); }
+        .subsidy-value { color: #ffc107; }
+
+        /* --- CARD DE IDENTIFICAÇÃO --- */
+        .info-card {
+            background-color: var(--cor-card);
+            border: 1px solid var(--cor-borda);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: var(--sombra);
+            text-align: left;
+        }
+
+        .info-card h2 {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: var(--cor-principal);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 15px;
+        }
+
+        .info-item i {
+            font-size: 1.2em;
+            color: var(--cor-principal);
+            width: 25px;
+            text-align: center;
+        }
+
+        .info-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label {
+            font-size: 0.7em;
+            color: var(--cor-texto-secundario);
+            text-transform: uppercase;
+        }
+
+        .value {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--cor-texto);
+        }
+
+        /* --- BOTÃO SAIR (REDONDO E PEQUENO) --- */
+        .logout-wrapper {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-logout-circle {
+            width: 65px;
+            height: 65px;
+            background: var(--cor-vermelho);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(255, 77, 77, 0.4);
+            transition: all 0.3s ease;
+            border: 4px solid var(--cor-fundo);
+        }
+
+        .btn-logout-circle:hover {
+            transform: scale(1.1) rotate(10deg);
+            background: #ff3333;
+        }
+
+        .btn-logout-circle i {
+            font-size: 1.5em;
+        }
+
+        .btn-logout-circle span {
+            font-size: 0.6em;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        <a href="{% url 'menu' %}" class="back-btn">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        <h1>Perfil</h1>
+    </div>
+
+    <div class="profile-container">
+        
+        <div class="income-grid">
+            <div class="income-item">
+                <i class="fa-solid fa-wallet positive-value"></i>
+                <strong>Disponível</strong>
+                <span class="value-display positive-value">{{ saldo_disponivel|floatformat:2|default:"0.00" }} KZ</span>
+            </div>
+
+            <div class="income-item">
+                <i class="fa-solid fa-piggy-bank subsidy-value"></i>
+                <strong>Subsídios</strong>
+                <span class="value-display subsidy-value">{{ saldo_subsidio|floatformat:2|default:"0.00" }} KZ</span>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h2><i class="fa-solid fa-id-card"></i> Identificação</h2>
+            <div class="profile-info">
+                <div class="info-item">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <div class="info-content">
+                        <span class="label">ID de Usuário</span>
+                        <span class="value">{{ usuario.username }}</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-ticket-alt"></i>
+                    <div class="info-content">
+                        <span class="label">Código de Convite</span>
+                        <span class="value">{{ usuario.invitation_code }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="logout-wrapper">
+            <a href="{% url 'saida' %}" class="btn-logout-circle">
+                <i class="fa-solid fa-power-off"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+        
+    </div>
+
+</body>
+</html>
