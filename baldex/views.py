@@ -342,18 +342,22 @@ def saque_view(request):
 def tarefa_view(request):
     usuario = request.user
     
+    # Define o fuso horário de Luanda
+    luanda_tz = pytz.timezone('Africa/Luanda')
+    agora_luanda = timezone.now().astimezone(luanda_tz)
+    hoje_luanda = agora_luanda.date()
+    
     # Verifica se o usuário tem um nível alugado ativo
     has_level = NivelAlugado.objects.filter(usuario=usuario, is_active=True).exists()
     
-    last_task_timestamp = None
-    # Pega o timestamp da última tarefa realizada
-    last_task = Tarefa.objects.filter(usuario=usuario).order_by('-data_realizacao').first()
-    if last_task:
-        # Converte a data para timestamp em milissegundos para uso no JavaScript
-        last_task_timestamp = int(last_task.data_realizacao.timestamp() * 1000)
+    # Verifica se já realizou a tarefa HOJE no fuso de Angola
+    tarefa_feita_hoje = Tarefa.objects.filter(
+        usuario=usuario, 
+        data_realizacao__date=hoje_luanda
+    ).exists()
 
     context = {
-        'last_task_timestamp': last_task_timestamp,
+        'pode_realizar_tarefa': not tarefa_feita_hoje, # Inverte: se não fez, pode realizar
         'has_level': has_level,
     }
     return render(request, 'tarefa.html', context)
@@ -368,11 +372,13 @@ def realizar_tarefa(request):
     if not niveis_alugados_ativos.exists():
         return JsonResponse({'status': 'error', 'message': 'Você não tem um nível alugado para realizar a tarefa.'}, status=403)
 
-    # Verifica se a tarefa já foi realizada hoje
-    hoje = timezone.now().date()
+    # Verifica se a tarefa já foi realizada hoje no fuso de Luanda
+    luanda_tz = pytz.timezone('Africa/Luanda')
+    hoje_luanda = timezone.now().astimezone(luanda_tz).date()
+    
     tarefa_realizada_hoje = Tarefa.objects.filter(
         usuario=usuario,
-        data_realizacao__date=hoje
+        data_realizacao__date=hoje_luanda
     ).exists()
 
     if tarefa_realizada_hoje:
@@ -656,19 +662,10 @@ def renda_view(request):
 
 @login_required
 def get_user_balances_ajax(request):
-    """
-    Retorna o saldo disponível e o saldo de subsídio (prêmio) do usuário logado
-    em formato JSON para atualização via AJAX.
-    """
     usuario = request.user
-    
-    # Formatação para 2 casas decimais e separador de milhares (se necessário)
-    # Recomenda-se enviar como string formatada para evitar problemas de precisão em JS
     data = {
-        'saldo_disponivel': f"{usuario.saldo_disponivel:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.'), # Ex: 1.000,00
-        'saldo_subsidio': f"{usuario.saldo_subsidio:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.'), # Ex: 1.000,00
-        # Adicione outros campos, se precisar de total_sacado, por exemplo.
-        # 'total_sacado': f"{usuario.total_sacado:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.'),
+        'saldo_disponivel': f"{usuario.saldo_disponivel:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.'), 
+        'saldo_subsidio': f"{usuario.saldo_subsidio:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.'), 
     }
     return JsonResponse(data)
     

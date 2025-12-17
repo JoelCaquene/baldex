@@ -53,9 +53,9 @@
     </div>
 
     <script>
-        // CAPTURA O ESTADO REAL DO SERVIDOR
-        const podeFazerTarefa = {{ pode_realizar_tarefa|yesno:"true,false" }};
-        const hasLevel = {{ has_level|yesno:"true,false" }};
+        // CAPTURA O ESTADO REAL DO SERVIDOR ENVIADO PELA VIEW
+        const podeFazerTarefa = {% if pode_realizar_tarefa %} true {% else %} false {% endif %};
+        const hasLevel = {% if has_level %} true {% else %} false {% endif %};
 
         const btn = document.getElementById('receive-gain-btn');
         const btnText = document.getElementById('btn-text');
@@ -73,18 +73,18 @@
             }
 
             if (podeFazerTarefa) {
-                // LIBERADO PARA GANHAR
+                // LIBERADO PARA GANHAR HOJE
                 statusBadge.textContent = "SISTEMA ATIVO";
                 btn.disabled = false;
                 btnText.textContent = "PAGA TAXI";
                 infoMsg.textContent = "Clique para receber o seu ganho diário.";
             } else {
-                // JÁ FEZ HOJE - BLOQUEADO
+                // JÁ FEZ HOJE - AGUARDAR AMANHÃ
                 statusBadge.textContent = "PAGO HOJE";
                 statusBadge.classList.add('concluido');
                 btn.disabled = true;
-                btnText.textContent = "SERVIÇO CONCLUÍDO";
-                infoMsg.textContent = "Limite diário atingido. Volte amanhã após a meia-noite.";
+                btnText.textContent = "CONCLUÍDO";
+                infoMsg.innerHTML = "Tarefa concluída! <br>Volte amanhã após a meia-noite.";
             }
         }
 
@@ -120,7 +120,7 @@
             }
         });
 
-        // Executa ao carregar
+        // Inicializa o estado do botão ao carregar a página
         inicializarPagina();
     </script>
 </body>
