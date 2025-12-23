@@ -4,24 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saque - baldex</title>
+    <title>Saque - Baldex</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
 
-        /* Cores e Variáveis - Tema Escuro */
         :root {
-            --cor-principal: #00b0ff; /* Azul vibrante */
-            --cor-fundo: #0a192f; /* Azul escuro profundo */
-            --cor-card: #112240; /* Azul levemente mais claro para os cards */
+            --cor-principal: #00b0ff;
+            --cor-fundo: #0a192f;
+            --cor-card: #112240;
             --cor-texto: #e6f1ff; 
             --cor-texto-secundario: #8892b0;
             --cor-borda: #233554;
-            --cor-sucesso: #64ffda; /* Verde neon/ciano para saldo */
-            --sombra-caixa: 0 10px 30px rgba(2, 12, 27, 0.5);
+            --cor-sucesso: #64ffda;
+            --christmas-red: #d42426;
+            --primary-gold: #ffd700;
         }
 
-        /* Estilos Globais */
         body {
             background-color: var(--cor-fundo);
             color: var(--cor-texto);
@@ -30,321 +29,135 @@
             padding: 0;
             text-align: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Cabeçalho */
-        .header {
-            padding: 40px 20px 20px;
-            text-align: center;
-            position: relative;
+        .header { padding: 40px 20px 20px; text-align: center; position: relative; }
+        .header h1 { 
+            margin: 0; font-size: 2.5em; font-weight: 800; 
+            background-image: linear-gradient(90deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .header h1 {
-            margin: 0;
-            font-size: 2.5em;
-            font-weight: 800;
-            background-image: linear-gradient(90deg, #00b0ff, #64ffda);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .back-button { position: absolute; left: 20px; top: 50px; color: var(--primary-gold); font-size: 1.5em; text-decoration: none; }
 
-        .back-button {
-            position: absolute;
-            left: 20px;
-            top: 50px;
-            color: var(--cor-principal);
-            font-size: 1.5em;
-            text-decoration: none;
-            transition: transform 0.2s;
-        }
-
-        .back-button:hover {
-            transform: translateX(-5px);
-        }
-
-        /* Contêineres Principais (Card) */
         .container {
-            width: 90%;
-            max-width: 450px;
-            background: var(--cor-card);
-            border-radius: 20px;
-            box-shadow: var(--sombra-caixa);
-            border: 1px solid var(--cor-borda);
-            padding: 30px;
-            margin: 20px auto;
-            box-sizing: border-box;
-            text-align: left;
+            width: 90%; max-width: 450px; background: var(--cor-card);
+            border-radius: 20px; border: 1px solid var(--cor-borda);
+            padding: 30px; margin: 20px auto; box-sizing: border-box;
         }
 
-        h2 {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: var(--cor-principal);
-            margin-bottom: 25px;
-            text-align: center;
+        /* Estilo Natalino */
+        #christmas-card {
+            border: 2px solid var(--christmas-red);
+            box-shadow: 0 0 20px rgba(212, 36, 38, 0.4);
+            display: none; /* Oculto por padrão, ativado via JS */
         }
 
-        /* Botão/Toggle */
-        .toggle-btn {
-            background-color: transparent;
-            color: var(--cor-principal);
-            border: 1px solid var(--cor-principal);
-            padding: 10px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9em;
-            transition: all 0.3s;
-            margin-bottom: 25px;
-            display: block;
-            width: 100%;
-            text-align: center;
+        .holiday-icon { width: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--primary-gold)); }
+        
+        .holiday-title { color: var(--primary-gold); font-weight: 800; font-size: 1.5em; margin-bottom: 15px; }
+        
+        .holiday-msg { 
+            background: var(--christmas-red); color: white; padding: 15px; 
+            border-radius: 15px; font-weight: 600; margin: 20px 0; line-height: 1.5;
         }
 
-        .toggle-btn:hover {
-            background-color: rgba(0, 176, 255, 0.1);
+        .holiday-footer {
+            border: 1px dashed var(--primary-gold); padding: 10px; border-radius: 10px;
+            color: var(--primary-gold); font-size: 0.85em; font-weight: bold;
         }
 
-        .toggle-btn i {
-            margin-right: 8px;
+        /* Neve */
+        .snowflake {
+            color: #fff; font-size: 1em; position: fixed; top: -10%; z-index: 9999;
+            user-select: none; animation: fall 10s linear infinite, shake 3s ease-in-out infinite;
         }
+        @keyframes fall { 0% { top: -10%; } 100% { top: 100%; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(50px); } }
 
-        /* Saldo */
-        .current-balance {
-            font-size: 1.2em;
-            font-weight: 700;
-            color: var(--cor-sucesso);
-            margin-bottom: 30px;
-            text-align: center;
-            background: rgba(100, 255, 218, 0.05);
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px dashed var(--cor-sucesso);
-        }
-
-        /* Formulário */
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--cor-texto-secundario);
-            font-size: 0.9em;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid var(--cor-borda);
-            background-color: var(--cor-fundo);
-            color: white;
-            border-radius: 12px;
-            font-size: 1.1em;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus {
-            border-color: var(--cor-principal);
-            outline: none;
-        }
-
-        .submit-btn {
-            background: linear-gradient(90deg, #00b0ff, #007bff);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s;
-            text-transform: uppercase;
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 176, 255, 0.4);
-        }
-
-        .submit-btn:disabled {
-            background: #233554;
-            color: #495670;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Info Box */
-        .info-box {
-            background-color: var(--cor-fundo);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 25px;
-            font-size: 0.85em;
-        }
-
-        .info-box p {
-            margin: 8px 0;
-            color: var(--cor-texto-secundario);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .info-box i {
-            color: var(--cor-principal);
-            margin-right: 8px;
-        }
-
-        /* Histórico */
-        .history-container { display: none; }
-
-        .history-item {
-            padding: 15px;
-            background: var(--cor-fundo);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border: 1px solid var(--cor-borda);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .history-details .valor {
-            font-size: 1em;
-            font-weight: 700;
-            color: white;
-        }
-
-        .history-details p {
-            font-size: 0.75em;
-            color: var(--cor-texto-secundario);
-            margin-top: 4px;
-        }
-
-        /* Status */
-        .status-text {
-            font-weight: 700;
-            font-size: 0.75em;
-            padding: 5px 12px;
-            border-radius: 8px;
-            text-transform: uppercase;
-        }
-
-        .status-approved { color: #64ffda; background: rgba(100, 255, 218, 0.1); }
-        .status-pending { color: #ffc107; background: rgba(255, 193, 7, 0.1); }
-        .status-rejected { color: #ff6b6b; background: rgba(255, 107, 107, 0.1); }
-
-        /* Mensagens */
-        .messages { list-style: none; padding: 0; margin-bottom: 20px; }
-        .messages li { padding: 12px; border-radius: 10px; font-size: 0.9em; font-weight: 600; }
-        .messages .error { background: rgba(255, 107, 107, 0.1); color: #ff6b6b; border: 1px solid #ff6b6b; }
-
+        /* Elementos originais (ocultos hoje) */
+        #withdrawSection, #historySection { display: none; }
+        .current-balance { color: var(--cor-sucesso); background: rgba(100, 255, 218, 0.05); padding: 15px; border-radius: 15px; border: 1px dashed var(--cor-sucesso); margin-bottom: 20px; }
+        .form-group { text-align: left; margin-bottom: 20px; }
+        .form-group input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--cor-borda); background: var(--cor-fundo); color: white; box-sizing: border-box;}
+        .submit-btn { width: 100%; background: linear-gradient(90deg, #00b0ff, #007bff); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .toggle-btn { background: none; color: var(--cor-principal); border: 1px solid var(--cor-principal); padding: 10px; border-radius: 10px; width: 100%; margin-bottom: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
+
+    <div class="snowflake" style="left:5%">❅</div><div class="snowflake" style="left:25%; animation-delay:2s">❆</div>
+    <div class="snowflake" style="left:45%; animation-delay:4s">❅</div><div class="snowflake" style="left:65%; animation-delay:1s">❆</div>
+    <div class="snowflake" style="left:85%; animation-delay:3s">❅</div>
+
     <div class="header">
-        <a href="{% url 'menu' %}" class="back-button">
-            <i class="fas fa-chevron-left"></i>
-        </a>
-        <h1>Saque</h1>
+        <a href="{% url 'menu' %}" class="back-button"><i class="fas fa-chevron-left"></i></a>
+        <h1>Baldex Saque</h1>
     </div>
-    
+
+    <div id="christmas-card" class="container">
+        <img src="https://cdn-icons-png.flaticon.com/512/2360/2360822.png" class="holiday-icon" alt="Natal">
+        <div class="holiday-title">FELIZ ANO NOVO!</div>
+        
+        <div class="holiday-msg">
+            A equipe BALDEX deseja a todos os investidores um ano repleto de conquistas e prosperidade! ✨
+        </div>
+
+        <div class="holiday-footer">
+            HOJE NÃO É DIA DE TRABALHO, SÓ AMANHÃ.
+        </div>
+    </div>
+
     <div id="withdrawSection" class="container">
-        
-        <button id="showHistoryBtn" class="toggle-btn">
-            <i class="fas fa-history"></i> Histórico de Saques
-        </button>
-
-        <p class="current-balance">
-            <i class="fas fa-wallet" style="margin-right: 10px;"></i>
-            Saldo: {{ usuario.saldo_disponivel|floatformat:2 }} KZ
-        </p>
-        
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        
-        {% if not tem_detalhes_bancarios %}
-            <p class="messages error"><i class="fas fa-exclamation-triangle"></i> Configure seu IBAN no perfil para sacar.</p>
-        {% endif %}
-
+        <button id="showHistoryBtn" class="toggle-btn"><i class="fas fa-history"></i> Histórico de Saques</button>
+        <p class="current-balance">Saldo: {{ usuario.saldo_disponivel|floatformat:2 }} KZ</p>
         <form method="post" action="{% url 'saque' %}">
             {% csrf_token %}
             <div class="form-group">
-                <label for="amount">Valor para retirar</label>
-                <input type="number" id="amount" name="amount" min="{{ SAQUE_MINIMO }}" step="0.01" placeholder="0.00" required>
+                <label>Valor para retirar</label>
+                <input type="number" name="amount" min="{{ SAQUE_MINIMO }}" step="0.01" placeholder="0.00" required>
             </div>
-            
-            <button type="submit" class="submit-btn" {% if not tem_detalhes_bancarios %}disabled{% endif %}>
-                Confirmar Saque
-            </button>
+            <button type="submit" class="submit-btn" {% if not tem_detalhes_bancarios %}disabled{% endif %}>Confirmar Saque</button>
         </form>
-
-        <div class="info-box">
-            <p><span><i class="fas fa-coins"></i> Mínimo:</span> <strong>{{ SAQUE_MINIMO }} KZ</strong></p>
-            <p><span><i class="fas fa-clock"></i> Horário:</span> <strong>{{ mensagem_horario }}</strong></p>
-            <p><span><i class="fas fa-percentage"></i> Taxa:</span> <strong>{{ TAXA_SAQUE }}%</strong></p>
-        </div>
     </div>
 
-    <div id="historySection" class="container history-container">
-        <button id="showWithdrawBtn" class="toggle-btn">
-            <i class="fas fa-money-bill-wave"></i> Voltar para Saque
-        </button>
-
+    <div id="historySection" class="container">
+        <button id="showWithdrawBtn" class="toggle-btn">Voltar para Saque</button>
         <h2>Meu Histórico</h2>
-        <div class="history-list">
-            {% for saque in historico_saques %}
-                <div class="history-item">
-                    <div class="history-details">
-                        <p class="valor">{{ saque.valor|floatformat:2 }} KZ</p>
-                        <p>{{ saque.data_saque|date:"d/m/Y H:i" }}</p>
-                    </div>
-                    <div>
-                        {% if saque.status == 'Aprovado' %}
-                            <span class="status-text status-approved">Aprovado</span>
-                        {% elif saque.status == 'Pendente' %}
-                            <span class="status-text status-pending">Pendente</span>
-                        {% else %}
-                            <span class="status-text status-rejected">Rejeitado</span>
-                        {% endif %}
-                    </div>
-                </div>
-            {% empty %}
-                <p style="text-align: center; color: var(--cor-texto-secundario); padding: 20px; font-size: 0.9em;">
-                    <i class="fas fa-folder-open" style="display: block; font-size: 2em; margin-bottom: 10px;"></i>
-                    Nenhum saque realizado.
-                </p>
-            {% endfor %}
         </div>
-    </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const hoje = new Date();
+            const dia = hoje.getDate();
+            const mes = hoje.getMonth() + 1;
+
+            const christmasCard = document.getElementById('christmas-card');
             const withdrawSection = document.getElementById('withdrawSection');
             const historySection = document.getElementById('historySection');
-            const showHistoryBtn = document.getElementById('showHistoryBtn');
-            const showWithdrawBtn = document.getElementById('showWithdrawBtn');
 
-            function showHistory() {
+            // SE FOR DIA 25/12
+            if (dia === 25 && mes === 12) {
+                christmasCard.style.display = 'block';
                 withdrawSection.style.display = 'none';
-                historySection.style.display = 'block';
-            }
-
-            function showWithdraw() {
-                withdrawSection.style.display = 'block';
                 historySection.style.display = 'none';
+            } else {
+                // Lógica Normal
+                christmasCard.style.display = 'none';
+                withdrawSection.style.display = 'block';
+
+                document.getElementById('showHistoryBtn').addEventListener('click', () => {
+                    withdrawSection.style.display = 'none';
+                    historySection.style.display = 'block';
+                });
+
+                document.getElementById('showWithdrawBtn').addEventListener('click', () => {
+                    withdrawSection.style.display = 'block';
+                    historySection.style.display = 'none';
+                });
             }
-
-            showWithdraw();
-
-            showHistoryBtn.addEventListener('click', showHistory);
-            showWithdrawBtn.addEventListener('click', showWithdraw);
         });
     </script>
 </body>
